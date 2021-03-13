@@ -20,14 +20,23 @@ app.post('/register', (req, res) => {
      const sirname  = req.body.name;
      const phoneNr  = req.body.phoneNr;
 
-     db.query(
-       "INSERT INTO users (username, password, name, phoneNr) VALUES (?,?,?,?)", 
-     [username, password, sirname, phoneNr],
+     db.query("SELECT * FROM users WHERE username = ?", (username),
      (err, result) => {
-        res.send({err: err});
-        console.log(err);
+       if (result.length>0) {  //If the username from the requester already exists we send back a message and cancel the registration
+         res.send({message: "Username already exists!"})
+       }
+       else { 
+        db.query(
+          "INSERT INTO users (username, password, name, phoneNr) VALUES (?,?,?,?)", 
+        [username, password, sirname, phoneNr],
+        (err, result) => {
+           res.send({err: err});
+           console.log(err);
+        }
+      );
+       }
      }
-   );
+     ) 
 });
 
 app.post('/login', (req, res) => {

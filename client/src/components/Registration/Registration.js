@@ -29,8 +29,16 @@ class Registration extends Component {
 
   handleRegistration = () => {
 
-    if (this.state.passwordReg1 != this.state.passWordReg2) {
+    if (this.state.phonenrReg.length < 8) {
+      alert("Please enter valid phone number!");
+    }
+
+    else if (this.state.passwordReg1 != this.state.passWordReg2) {
       alert("Passwords do not match - Try again!");
+    }
+
+    else if (this.state.passwordReg1.length<5) {
+      alert("Password must at least be 5 characters!")
     }
 
     else {
@@ -40,9 +48,21 @@ class Registration extends Component {
       password: this.state.passwordReg1,
       phoneNr: this.state.phonenrReg
 
-    }).then(() => {   
-       //Do something after post request
-    }); 
+    }).then(response => {
+      if (response.data.message) {    //If the response from server returns us the message of "user already exists" we alert here!
+      alert('Username already exists - Try another!');
+      }
+      else {
+      alert('Success!'); //Navigate to "Login" or "Confirmation page of the registration"
+      }
+    })
+    .catch(error => {
+      console.log({
+        error,  
+        'error response': error.response
+      })
+      alert('Something went wrong!')
+    }) 
   }
   };
 
