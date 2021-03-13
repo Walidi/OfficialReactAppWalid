@@ -65,7 +65,7 @@ function Login () {
         <div className="buttonContainer">
         <button onClick={handleLogin}> Login </button>
         <p>
-            Don't have an acount?
+            Don't have an account?
             <span onClick={goToRegistration}>Register here!</span>
         </p>
         </div>

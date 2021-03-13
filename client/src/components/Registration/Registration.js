@@ -61,7 +61,7 @@ class Registration extends Component {
         error,  
         'error response': error.response
       })
-      alert('Something went wrong!')
+      alert('Server error!')
     }) 
   }
   };
