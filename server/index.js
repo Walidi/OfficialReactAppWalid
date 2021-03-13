@@ -17,12 +17,14 @@ app.post('/register', (req, res) => {
 
      const username = req.body.username;
      const password = req.body.password;
-     const sirname  = req.body.sirname;
+     const sirname  = req.body.name;
+     const phoneNr  = req.body.phoneNr;
 
      db.query(
-       "INSERT INTO users (username, password, name) VALUES (?,?,?)", 
-     [username, password, sirname],
+       "INSERT INTO users (username, password, name, phoneNr) VALUES (?,?,?,?)", 
+     [username, password, sirname, phoneNr],
      (err, result) => {
+        res.send({err: err});
         console.log(err);
      }
    );
