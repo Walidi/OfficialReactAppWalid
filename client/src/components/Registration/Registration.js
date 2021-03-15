@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import './Registration.css'
+import  { useHistory } from 'react-router-dom';
 
 class Registration extends Component {
 
@@ -10,6 +11,11 @@ class Registration extends Component {
     passwordReg1: "",
     passWordReg2: "",
     phonenrReg: "",
+    usernameInputStatus: "",
+    nameInputStatus: "",
+    password1InputStatus: "",
+    password2InputStatus: "",
+    phonenrInputStatus: ""
   }
 
   componentDidMount() {                 //Resetting passwords after the checks so the states update fast thru this
@@ -27,21 +33,60 @@ class Registration extends Component {
     this.props.history.push('/');
   }
 
+  goToConfirmationScreen=() => {
+    this.props.history.push('/confirmation');
+  }
+
   handleRegistration = () => {
 
+    this.setState({usernameInputStatus: ""});         //Resetting the input-statuses so we can set them again on-press
+    this.setState({nameInputStatus: ""});
+    this.setState({password1InputStatus: ""});
+    this.setState({password2InputStatus: ""});
+    this.setState({phonenrInputStatus: ""});
+
+    let inputStatusOk = true;
+
+    if (this.state.nameReg == "") {
+      this.setState({nameInputStatus: "Name required!"})
+      inputStatusOk = false;
+    }
+   else if (this.state.nameReg.length < 3) {
+      this.setState({nameInputStatus: "Name must be least 3 characters!"})
+      inputStatusOk = false;
+    }
+
     if (this.state.phonenrReg.length < 8) {
-      alert("Please enter valid phone number!");
+      this.setState({phonenrInputStatus: "Valid phonenumber required!"});
+      inputStatusOk = false;
+     }
+
+    if (this.state.usernameReg == "") {
+      this.setState({usernameInputStatus: "Username required!"})
+      inputStatusOk = false;
+    }
+     else if (this.state.usernameReg.length < 3) {
+      this.setState({usernameInputStatus: "Username must be least 3 characters!"})
+      inputStatusOk = false;
+    }
+    
+    if (this.state.passwordReg1 == "") {
+      this.setState({password1InputStatus: "Password required!"})
+      inputStatusOk = false;
     }
 
     else if (this.state.passwordReg1 != this.state.passWordReg2) {
-      alert("Passwords do not match - Try again!");
+      this.setState({password2InputStatus: "Passwords do not match!"})
+      inputStatusOk = false;
     }
 
-    else if (this.state.passwordReg1.length<5) {
-      alert("Password must at least be 5 characters!")
+   else if (this.state.passwordReg1.length<5) {
+      this.setState({password1InputStatus: "Password must at least be 5 characters!"})
+      inputStatusOk = false;
     }
 
-    else {
+    if (inputStatusOk){   //If input status is true I.E no input errors - We send post request!
+
     Axios.post("http://localhost:3001/register", {   //End-point for creation request
       username: this.state.usernameReg,
       name: this.state.nameReg, 
@@ -53,7 +98,8 @@ class Registration extends Component {
       alert('Username already exists - Try another!');
       }
       else {
-      alert('Success!'); //Navigate to "Login" or "Confirmation page of the registration"
+      //alert('Success!'); //Navigate to "Login" or "Confirmation page of the registration"
+      this.goToConfirmationScreen;
       }
     })
     .catch(error => {
@@ -85,6 +131,8 @@ class Registration extends Component {
           this.setState({nameReg: event.target.value});
         }}
         />
+        <p className="errorMsg">{this.state.nameInputStatus}</p>
+
          <label>Phone number</label>
         <input 
         type="number"
@@ -96,6 +144,8 @@ class Registration extends Component {
           this.setState({phonenrReg: event.target.value});
         }}
         />
+        <p className="errorMsg">{this.state.phonenrInputStatus}</p>
+
         <label>Username</label>
         <input 
         type="text" 
@@ -105,6 +155,9 @@ class Registration extends Component {
           this.setState({usernameReg: event.target.value});
         }}
         />
+
+        <p className="errorMsg">{this.state.usernameInputStatus}</p>
+
         <label>Password</label>
         <input 
         type="password"
@@ -114,6 +167,8 @@ class Registration extends Component {
           this.setState({passwordReg1: event.target.value});
         }}
         />
+        <p className="errorMsg">{this.state.password1InputStatus}</p>
+
         <label>Repeat password</label>
         <input 
         type="password"
@@ -123,6 +178,8 @@ class Registration extends Component {
           this.setState({passWordReg2: event.target.value});
         }}
         />
+        <p className="errorMsg">{this.state.password2InputStatus}</p>
+
         <div className="buttonContainer">
         <button onClick={this.handleRegistration}> Register </button>
         <p>
