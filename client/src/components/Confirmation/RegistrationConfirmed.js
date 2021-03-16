@@ -13,10 +13,14 @@ class RegistrationConfirmed extends Component {
     <section className="Confirmation">
         
     <div className="confirmationContainer">
+    <p>Your account has been created!</p>
+    <div className="buttonContainer">
         <p>
             <span onClick={this.goBackToLogin}>Go back to login</span>
         </p>
         </div>
+        </div>
+
     </section>
     );
   }

@@ -52,7 +52,7 @@ class Registration extends Component {
       inputStatusOk = false;
     }
    else if (this.state.nameReg.length < 3) {
-      this.setState({nameInputStatus: "Name must be least 3 characters!"})
+      this.setState({nameInputStatus: "Name must be at least 3 characters!"})
       inputStatusOk = false;
     }
 
@@ -66,7 +66,7 @@ class Registration extends Component {
       inputStatusOk = false;
     }
      else if (this.state.usernameReg.length < 3) {
-      this.setState({usernameInputStatus: "Username must be least 3 characters!"})
+      this.setState({usernameInputStatus: "Username must be at least 3 characters!"})
       inputStatusOk = false;
     }
     
@@ -99,7 +99,7 @@ class Registration extends Component {
       }
       else {
       //alert('Success!'); //Navigate to "Login" or "Confirmation page of the registration"
-      this.goToConfirmationScreen;
+      this.goToConfirmationScreen();
       }
     })
     .catch(error => {
