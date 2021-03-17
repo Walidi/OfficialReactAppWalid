@@ -1,5 +1,4 @@
 const express = require("express");
-const app = express();
 const mysql = require ('mysql');
 const cors = require('cors');
 
@@ -10,8 +9,29 @@ const session = require('express-session');  //Keeps the user logged in always (
 const bcrypt = require('bcrypt'); //Cryption function
 const saltRounds = 10;
 
-app.use(cors());  //Now you can make requests!
+const app = express();
+
 app.use(express.json()); //Parsing Json
+
+app.use(cors({   //Parsing origin of the front-end
+   origin: ["http://localhost:3000"], 
+   methods: ["GET", "POST"],
+   credentials: true   //Allows cookies to be enabled
+}));  
+
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    key: "userId",
+    secret: "subscribe",    //Normally this has to be long and complex for security
+    resave: false,
+    saveUninitialized: false,
+    cookie: {  //How long will the cookie live for?
+      expires: 60 * 60 * 24, //Expires after 24 hours
+    }
+  }));
 
 const db = mysql.createConnection({
      user: "webapptest2300",
@@ -54,6 +74,14 @@ app.post('/register', (req, res) => {
      ) 
 });
 
+app.get('/login', (req, res) => { //Sends response to client whether a user is logged into session or not
+    if (req.session.user) {
+      res.send({loggedIn: true, user: req.session.user}); //Set logged in to be true, and return user data
+    } else {
+      res.send({loggedIn: false});
+    }
+});
+
 app.post('/login', (req, res) => {
 
      const username = req.body.username;
@@ -70,6 +98,8 @@ app.post('/login', (req, res) => {
       if (result.length>0) { //Checking if username input returns a row
           bcrypt.compare(password, result[0].password, (error, response)=> {  //Comparing password input from user with hashing to the same hashed version in DB
              if (response) { //If the password input matches the hashed password, the user is logged in!
+              req.session.user = result; //Creating session for the user!
+              console.log(req.session.user) //Logging the data-object from db (the user logged in)
               res.send(result);
              } else { //If there is no response, it means the password is wrong but username is correct!
                res.send({message: "Wrong username/password!"});

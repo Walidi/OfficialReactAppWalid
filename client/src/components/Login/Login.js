@@ -1,4 +1,4 @@
-import React,{useState}  from 'react';
+import React,{useEffect, useState}  from 'react';
 import Axios from 'axios';
 import './Login.css';
 import  { useHistory } from 'react-router-dom';
@@ -10,7 +10,8 @@ function Login () {
   const [loginStatus, setLoginStatus] = useState("");
 
   const history = useHistory();
-
+  
+  Axios.defaults.withCredentials = true; 
   const handleLogin = () => {
     
     if (usernameAuth == "" || passwordAuth == "") {   //Dummy check
@@ -29,6 +30,14 @@ function Login () {
       }
     });
   };
+
+  useEffect(() => { //Stay logged in, if user is logged in, after refresh
+     Axios.get("http://localhost:3001/login").then((response) => { //Get logged-in-data after refesh
+      if (response.data.loggedIn == true)  {
+     setLoginStatus(response.data.user[0].name); //Always sending current user name despite refesh
+      }
+    }) 
+  }, [])
 
    const goToRegistration = () => {
     history.push('/registration');
