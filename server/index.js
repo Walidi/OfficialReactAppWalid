@@ -9,6 +9,8 @@ const session = require('express-session');  //Keeps the user logged in always (
 const bcrypt = require('bcrypt'); //Cryption function
 const saltRounds = 10;
 
+const jwt = require('jsonwebtoken');
+
 const app = express();
 
 app.use(express.json()); //Parsing Json
@@ -82,6 +84,27 @@ app.get('/login', (req, res) => { //Sends response to client whether a user is l
     }
 });
 
+const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
+  const token = req.headers['x-access-token']
+
+  if (!token) {//If there isnt any token
+    res.send('Token needed!');
+  } else {
+    jwt.verify(token, "jwtSecret", (err, decoded) => {
+         if (err) {
+           res.json({auth: false, message: 'Authentication failed!'});
+         } else { //Else if user is verified
+           req.userId = decoded.id; //Token/id is saved
+           next();
+         }
+    });
+  }
+};
+
+app.get('/isUserAuth', verifyJWT, (req, res) => { //An endpoint for user-auth
+    res.send('Yo, you are authenticated!');
+})
+
 app.post('/login', (req, res) => {
 
      const username = req.body.username;
@@ -98,18 +121,41 @@ app.post('/login', (req, res) => {
       if (result.length>0) { //Checking if username input returns a row
           bcrypt.compare(password, result[0].password, (error, response)=> {  //Comparing password input from user with hashing to the same hashed version in DB
              if (response) { //If the password input matches the hashed password, the user is logged in!
+              const id = result[0].id; //Getting id of the first user of the list of users (the user retrieved)
+              const token = jwt.sign({id}, "jwtSecret", { //Verifies token from user's id
+                expiresIn: 300,
+              })
               req.session.user = result; //Creating session for the user!
-              console.log(req.session.user) //Logging the data-object from db (the user logged in)
-              res.send(result);
+              
+              res.json({auth: true, token: token, result: result}); //Passing authenticated user
+
              } else { //If there is no response, it means the password is wrong but username is correct!
-               res.send({message: "Wrong username/password!"});
+               res.json({auth: false, message: "Wrong username/password!"});
              }
           })
         } else {    //If nothing is matched from the inputs!
-          res.send({ message: "User does not exist!"});
+          res.json({auth: false, message: "User does not exist!"});
           }
      }
    );
+});
+
+app.get('/users', verifyJWT, (req, res) => {
+
+  db.query("SELECT id, name, username, phonenr FROM users;", 
+
+  (err, result) => {
+    if (err)  {
+      res.send({err: err}) //Sending error to front-end
+      console.log(err);
+   }
+   if (result.length>0) {
+     res.send(result);
+  }
+  else {
+    console.log(err);
+  }
+});
 });
 
 app.listen(3001, () => {
