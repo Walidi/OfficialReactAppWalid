@@ -1,13 +1,15 @@
-import React,{useEffect, useState}  from 'react';
+import React,{useContext, useEffect, useState}  from 'react';
 import Axios from 'axios';
 import './Login.css';
 import  { useHistory } from 'react-router-dom';
+import {AuthContext} from '../Context/AuthContext'
 
 function Login () {
  
   const [usernameAuth, setUsernameAuth] = useState("");
   const [passwordAuth, setPasswordAuth] = useState("");
-  const [loginStatus, setLoginStatus] = useState(false); 
+  const [loginStatus, setLoginStatus] = useContext(AuthContext);
+ // const {isAuth} = useAuthRoute();
   const [inputResponse, setInputResponse] = useState("");
 
   const history = useHistory();
@@ -34,10 +36,9 @@ function Login () {
        setLoginStatus(false); //Login status is set
        setInputResponse(response.data.message);
       } else {
-           setLoginStatus(true); //Displaying username of the one logged in
+           setLoginStatus(true); 
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
            {loginStatus && (goToHomeScreen())}
-           userAuthenticated(); //Just logs authentication data
       }
     });
   };
@@ -54,17 +55,6 @@ function Login () {
     history.push('/registration');
     }
     
-    const userAuthenticated = () => {
-      Axios.get("http://localhost:3001/isUserAuth", {
-        
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-      }).then((response) => {
-        console.log(response); //Responds from auth "yo you are authenticated!" fx
-      });
-    };
-
   return (
     <section className="Login">
         
