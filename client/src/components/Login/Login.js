@@ -38,6 +38,9 @@ function Login () {
       } else {
            setLoginStatus(true); 
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
+           localStorage.setItem("userID", response.data.result[0].id); //Current users id
+           localStorage.setItem("name", response.data.result[0].name); //Current users name
+           localStorage.setItem("phonenr", response.data.result[0].phoneNr);
            {loginStatus && (goToHomeScreen())}
       }
     });

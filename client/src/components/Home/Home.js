@@ -40,12 +40,16 @@ class Home extends Component {
     <section className="Home">
         
     <div className="Container">
+    <p>{localStorage.getItem("userID")}</p>
     <div className="buttonContainer">
        <button onClick = {this.getUsers}>Get users!</button>
-       <div>
-      {this.state.users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}      </div>
-        </div>
-        </div>
+
+      <div>
+      {this.state.users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
+      </div>
+
+    </div>
+    </div>
 
     </section>
     );
