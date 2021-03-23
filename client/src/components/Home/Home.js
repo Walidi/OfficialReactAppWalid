@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect} from 'react';
 import Axios from 'axios';
 import './Home.css'
+import  {withRouter } from 'react-router-dom';
 
 class Home extends Component {
 
@@ -9,11 +10,13 @@ class Home extends Component {
         isLoaded: false
     }
     
-    logout =() => {
-           //Something here where we end the session!
-        this.props.history.push('/');
-      }
+    handleLogOut =() => {
 
+        this.props.history.push('/');
+        localStorage.clear();
+        sessionStorage.clear();
+       
+      }
       getUsers = () => {
         Axios.get("http://localhost:3001/users", {
           
@@ -34,11 +37,11 @@ class Home extends Component {
           }) 
         };
 
+
   render() {
     return (
 
     <section className="Home">
-        
     <div className="Container">
     <p>{localStorage.getItem("userID")}</p>
     <div className="buttonContainer">
@@ -47,7 +50,7 @@ class Home extends Component {
       <div>
       {this.state.users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
       </div>
-
+      <button onClick = {this.handleLogOut}>Log out</button>
     </div>
     </div>
 
@@ -56,4 +59,4 @@ class Home extends Component {
   }
 };
 
-export default Home;
+export default withRouter(Home);
