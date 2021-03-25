@@ -2,13 +2,14 @@ import React,{useContext, useEffect, useState}  from 'react';
 import Axios from 'axios';
 import './Login.css';
 import  { useHistory } from 'react-router-dom';
-import {AuthContext} from '../Context/AuthContext'
+import { AuthContext } from '../Context/AuthContext';
 
 function Login () {
  
   const [usernameAuth, setUsernameAuth] = useState("");
   const [passwordAuth, setPasswordAuth] = useState("");
-  const [loginStatus, setLoginStatus] =  useState(false);
+
+  const [loginStatus, setLoginStatus] = useContext(AuthContext);
   const [inputResponse, setInputResponse] = useState("");
 
   const history = useHistory();
@@ -22,9 +23,8 @@ function Login () {
   const handleLogin = () => {
     
     if (usernameAuth == "" || passwordAuth == "") {   //Dummy check
-      setLoginStatus(false);
       setInputResponse("Fields required!");
-      localStorage.setItem("loggedIn", "No")
+      setLoginStatus(false);
      }
    else
     Axios.post('http://localhost:3001/login', {
@@ -32,34 +32,17 @@ function Login () {
       password: passwordAuth
     }).then((response)=> {
       if (!response.data.auth) { //checking for response message
-       setLoginStatus(false); //Login status is set
        setInputResponse(response.data.message);
-       localStorage.setItem("loggedIn", "No")
+       setLoginStatus(false);
       } else {
-           setLoginStatus(true);                             
-           localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
+           localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
+           localStorage.setItem("userID", response.data.result[0].id); //Current users id     
+           setLoginStatus(true);
 
-            /**OBS! These values shouldnt be contained in localstorage but in states or server session*/
-  
-           localStorage.setItem("userID", response.data.result[0].id); //Current users id
-
-           localStorage.setItem("loggedIn", "Yes")
-           /*
-           localStorage.setItem("name", response.data.result[0].name); //Current users name
-           localStorage.setItem("phonenr", response.data.result[0].phoneNr); //Current users phone number
-           */
-           {loginStatus && (goToHomeScreen())}
+           {loginStatus && goToHomeScreen()};
       }
     });
   };
-
-  useEffect(() => { //Stay logged in, if user is logged in, after refresh
-     Axios.get("http://localhost:3001/login").then((response) => { //Get logged-in-data after refesh
-      if (response.data.loggedIn == true)  {
-     setLoginStatus(true); //Always sending current user name despite refesh
-      } 
-    }) 
-  }, [])
 
    const goToRegistration = () => {
     history.push('/registration');

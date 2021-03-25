@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   session({
-    key: "userId",
+    key: "userID",
     secret: "subscribe",    //Normally this has to be long and complex for security
     resave: false,
     saveUninitialized: false,
@@ -94,16 +94,25 @@ const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
          if (err) {
            res.json({auth: false, message: 'Authentication failed!'});
          } else { //Else if user is verified
-           req.userId = decoded.id; //Token/id is saved
+           req.userID = decoded.id; //Token/id is saved
            next();
          }
     });
   }
 };
 
-app.get('/isUserAuth', verifyJWT, (req, res) => { //An endpoint for user-auth
-    res.send('Yo, you are authenticated!');
+app.post('/isUserAuth', (req, res) => { //An endpoint for user-auth
+
+  const token = req.body.token;
+
+  jwt.verify(token, "jwtSecret", (err, decoded) => {
+    if (err) {
+    res.send({auth: false});
+    } else { //Else if user is verified
+    res.send({auth: true})
+    }
 })
+});
 
 app.post('/login', (req, res) => {
 
@@ -161,5 +170,3 @@ app.get('/users', verifyJWT, (req, res) => {
 app.listen(3001, () => {
     console.log("Yay, your server is running on port 3001!");
   }); //port number server is running on  
-  
-      

@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
 import {Route, Redirect} from 'react-router-dom';
 
-function ProtectedRoute({/* isAuth: isAuth,*/ component: Component, ...rest}) {
+function ProtectedRoute({authStatus: authStatus, component: Component, ...rest}) {
+
     return <Route {...rest} render={(props)=> {
-      if (localStorage.getItem("loggedIn") == "Yes")/*isAuth == true)*/ {  //If authentication is success (logged in / 'true) we send the component/page to the user
-      console.log("Home still open!")
+      if (authStatus) {  //If authentication is success (logged in / 'true) we send the component/page to the user
           return <Component />;
       } else  {
-          console.log("Home not open!");
+          console.log("CANT GO TO HOME!");
+          console.log(authStatus);
           return (  //Else we will be returned to the login screen! 
                <Redirect to ={{pathname: "/", state:{from: props.location}}} />
           );
@@ -15,5 +17,4 @@ function ProtectedRoute({/* isAuth: isAuth,*/ component: Component, ...rest}) {
      }  
 }/>;
 }
-
 export default ProtectedRoute;

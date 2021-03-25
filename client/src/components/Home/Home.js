@@ -2,21 +2,23 @@ import React, { Component, useEffect} from 'react';
 import Axios from 'axios';
 import './Home.css'
 import  {withRouter } from 'react-router-dom';
+import { AuthContext } from '../Context/AuthContext';
 
 class Home extends Component {
 
     state = {
         users: [],
-        isLoaded: false
+        isLoaded: false,
     }
-    
+      
     handleLogOut =() => {
 
-        this.props.history.push('/');
         localStorage.clear();
+        //Auth Context has to be set false
         sessionStorage.clear();
-       
+        this.props.history.push('/');
       }
+
       getUsers = () => {
         Axios.get("http://localhost:3001/users", {
           
@@ -46,7 +48,6 @@ class Home extends Component {
     <p>{localStorage.getItem("userID")}</p>
     <div className="buttonContainer">
        <button onClick = {this.getUsers}>Get users!</button>
-
       <div>
       {this.state.users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
       </div>
