@@ -2,7 +2,6 @@ import React, { Component, useEffect} from 'react';
 import Axios from 'axios';
 import './Home.css'
 import  {withRouter } from 'react-router-dom';
-import { AuthContext } from '../Context/AuthContext';
 
 class Home extends Component {
 
@@ -14,7 +13,6 @@ class Home extends Component {
     handleLogOut =() => {
 
         localStorage.clear();
-        //Auth Context has to be set false
         sessionStorage.clear();
         this.props.history.push('/');
       }

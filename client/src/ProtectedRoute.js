@@ -8,8 +8,6 @@ function ProtectedRoute({authStatus: authStatus, component: Component, ...rest})
       if (authStatus) {  //If authentication is success (logged in / 'true) we send the component/page to the user
           return <Component />;
       } else  {
-          console.log("CANT GO TO HOME!");
-          console.log(authStatus);
           return (  //Else we will be returned to the login screen! 
                <Redirect to ={{pathname: "/", state:{from: props.location}}} />
           );
