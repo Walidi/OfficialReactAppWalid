@@ -2,6 +2,7 @@ import React, { Component, useEffect} from 'react';
 import Axios from 'axios';
 import './Home.css'
 import  {withRouter } from 'react-router-dom';
+import logo from '../../images/logo.png';
 import {
   Nav,
   NavLink,
@@ -52,7 +53,8 @@ class Home extends Component {
       <div>
       <Nav>
       <NavLink to='/home'>
-        <img src={require('../../images/logo.png')} alt='logo' />
+        <img style={{flex:1, height: 60, width: 60}}
+        src={logo}/>
       </NavLink>
       <Bars />
       <NavMenu>
