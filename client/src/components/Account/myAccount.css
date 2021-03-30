@@ -1,4 +1,4 @@
-.Home {
+.Account {
     width: 100%;
     min-height: 100vh;
     padding: 0 20px;
@@ -21,9 +21,4 @@
       rgba(56, 72, 20, 0.9) 59%,
       rgba(17, 75, 62, 0.9) 100%
     )
-  }
-
-.buttonContainer {
-    width: 100%;
-    padding: 24px 0;
   }

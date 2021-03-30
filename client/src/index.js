@@ -5,7 +5,9 @@ import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import RegistrationConfirmed from './components/Confirmation/RegistrationConfirmed'
 import Home from './components/Home/Home';
+import myAccount from './components/Account/myAccount';
 import ProtectedRoute from './ProtectedRoute';
+
 import { AuthContext } from './components/Context/AuthContext';
 import Axios from 'axios';
 
@@ -36,7 +38,9 @@ function App () {           //Exact path = Beginning page of the site
       <Route exact path="/" component={Login} />
       <Route path="/Registration" component={Registration} />
       <Route path ="/Confirmation" component={RegistrationConfirmed}/>
+    
       <ProtectedRoute path="/home" component ={Home} authStatus = {authStatus}/>
+      <ProtectedRoute path = "/myAccount" component={myAccount} authStatus = {authStatus}/>
       </Switch>
   </Router>
     )
