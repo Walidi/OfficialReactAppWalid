@@ -3,6 +3,7 @@ import Axios from 'axios';
 import './Login.css';
 import  { useHistory } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
+import logo from '../../images/logo.png';
 
 function Login () {
  
@@ -49,7 +50,12 @@ function Login () {
     }
     
   return (
+
     <section className="Login">
+    <div>
+    <img style={{flex:1, height: 80, width: 90, marginTop: 10}}
+    src={logo}/>
+    </div>
         
     <div className="loginContainer">
 
