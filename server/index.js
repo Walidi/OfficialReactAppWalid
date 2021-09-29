@@ -136,7 +136,7 @@ app.post('/login', (req, res) => {
               })
               req.session.user = result; //Creating session for the user!
               
-              res.json({auth: true, token: token, result: result}); //Passing authenticated user
+              res.json({auth: true, token: token, result: result}); //Passing authenticated user   (result = row = user)
 
              } else { //If there is no response, it means the password is wrong but username is correct!
                res.json({auth: false, message: "Wrong username/password!"});
