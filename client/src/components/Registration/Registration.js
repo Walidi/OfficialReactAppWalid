@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import validator from 'validator'
 import './Registration.css'
 import  { useHistory } from 'react-router-dom';
 
 class Registration extends Component {
 
   state = {
-    usernameReg: "",
+    emailReg: "",
     nameReg: "",
     passwordReg1: "",
     passWordReg2: "",
     phonenrReg: "",
-    usernameInputStatus: "",
+    emailInputStatus: "",
     nameInputStatus: "",
     password1InputStatus: "",
     password2InputStatus: "",
@@ -29,6 +30,15 @@ class Registration extends Component {
       }
     }
 
+    checkEmail = (email) => {
+      if (email != "" && validator.isEmail(email)) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
   goBackToLogin =() => {
     this.props.history.push('/');
   }
@@ -39,7 +49,7 @@ class Registration extends Component {
 
   handleRegistration = () => {
 
-    this.setState({usernameInputStatus: ""});         //Resetting the input-statuses so we can set them again on-press
+    this.setState({emailInputStatus: ""});         //Resetting the input-statuses so we can set them again on-press
     this.setState({nameInputStatus: ""});
     this.setState({password1InputStatus: ""});
     this.setState({password2InputStatus: ""});
@@ -61,15 +71,12 @@ class Registration extends Component {
       inputStatusOk = false;
      }
 
-    if (this.state.usernameReg == "") {
-      this.setState({usernameInputStatus: "Username required!"})
+    if (this.checkEmail(this.state.emailReg) == false) {
+      this.setState({emailInputStatus: "Valid email required!"})
       inputStatusOk = false;
     }
-     else if (this.state.usernameReg.length < 3) {
-      this.setState({usernameInputStatus: "Username must be at least 3 characters!"})
-      inputStatusOk = false;
-    }
-    
+
+
     if (this.state.passwordReg1 == "") {
       this.setState({password1InputStatus: "Password required!"})
       inputStatusOk = false;
@@ -88,14 +95,14 @@ class Registration extends Component {
     if (inputStatusOk){   //If input status is true I.E no input errors - We send post request!
 
     Axios.post("http://localhost:3001/register", {   //End-point for creation request
-      username: this.state.usernameReg,
+      email: this.state.emailReg,
       name: this.state.nameReg, 
       password: this.state.passwordReg1,
       phoneNr: this.state.phonenrReg
 
     }).then(response => {
-      if (response.data.message) {    //If the response from server returns us the message of "user already exists" we alert here!
-      alert('Username already exists - Try another!');
+      if (response.data.message) {    //If the response from server returns us the message of "User already exists" we alert here!
+      alert('Email already exists - Try another!');
       }
       else {
       //alert('Success!'); //Navigate to "Login" or "Confirmation page of the registration"
@@ -146,17 +153,17 @@ class Registration extends Component {
         />
         <p className="errorMsg">{this.state.phonenrInputStatus}</p>
 
-        <label>Username</label>
+        <label>Email</label>
         <input 
         type="text" 
         required
         autoFocus
         onChange={(event) => {
-          this.setState({usernameReg: event.target.value});
+          this.setState({emailReg: event.target.value});
         }}
         />
 
-        <p className="errorMsg">{this.state.usernameInputStatus}</p>
+        <p className="errorMsg">{this.state.emailInputStatus}</p>
 
         <label>Password</label>
         <input 

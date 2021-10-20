@@ -44,15 +44,15 @@ const db = mysql.createConnection({
 
 app.post('/register', (req, res) => {
 
-     const username = req.body.username;
+     const email = req.body.email;
      const password = req.body.password;
      const sirname  = req.body.name;
      const phoneNr  = req.body.phoneNr;
 
-     db.query("SELECT * FROM users WHERE username = ?", (username),
+     db.query("SELECT * FROM users WHERE email = ?", (email),
      (err, result) => {
-       if (result.length>0) {  //If the username from the requester already exists we send back a message and cancel the registration
-         res.send({message: "Username already exists!"})
+       if (result.length>0) {  //If the email from the requester already exists we send back a message and cancel the registration
+         res.send({message: "Email already exists!"})
        }
 
        else { 
@@ -63,8 +63,8 @@ app.post('/register', (req, res) => {
           }
 
           db.query(
-            "INSERT INTO users (username, password, name, phoneNr) VALUES (?,?,?,?)", 
-          [username, hash, sirname, phoneNr],
+            "INSERT INTO users (email, password, name, phoneNr) VALUES (?,?,?,?)", 
+          [email, hash, sirname, phoneNr],
           (err, result) => {
              res.send({err: err});
              console.log(err);
@@ -116,12 +116,12 @@ app.post('/isUserAuth', (req, res) => { //An endpoint for user-auth
 
 app.post('/login', (req, res) => {
 
-     const username = req.body.username;
+     const email = req.body.email;
      const password = req.body.password;
 
      db.query(
-       "SELECT * FROM users WHERE username = ?;", 
-     username,
+       "SELECT * FROM users WHERE email = ?;", 
+     email,
      (err, result) => {
       if (err)  {
           res.send({err: err}) //Sending error to front-end
@@ -139,7 +139,7 @@ app.post('/login', (req, res) => {
               res.json({auth: true, token: token, result: result}); //Passing authenticated user   (result = row = user)
 
              } else { //If there is no response, it means the password is wrong but username is correct!
-               res.json({auth: false, message: "Wrong username/password!"});
+               res.json({auth: false, message: "Wrong email/password!"});
              }
           })
         } else {    //If nothing is matched from the inputs!
@@ -151,7 +151,7 @@ app.post('/login', (req, res) => {
 
 app.get('/users', verifyJWT, (req, res) => {
 
-  db.query("SELECT id, name, username, phonenr FROM users;", 
+  db.query("SELECT id, name, email, phonenr FROM users;", 
 
   (err, result) => {
     if (err)  {

@@ -58,14 +58,11 @@ class Home extends Component {
       </NavLink>
       <Bars />
       <NavMenu>
-        <NavLink to='/services' activeStyle>
-          Services (NOT READY)
+        <NavLink to='candidates' activeStyle>
+          Candidates (NOT READY)
         </NavLink>
-        <NavLink to='/contact-us' activeStyle>
-          Contact Us (NOT READY)
-        </NavLink>
-        <NavLink to='/myAccount' activeStyle>
-          My account
+        <NavLink to='/myProfile' activeStyle>
+          My Profile
         </NavLink>
       </NavMenu>
       <NavBtn>

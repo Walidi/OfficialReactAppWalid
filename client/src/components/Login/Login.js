@@ -7,7 +7,7 @@ import logo from '../../images/logo.png';
 
 function Login () {
  
-  const [usernameAuth, setUsernameAuth] = useState("");
+  const [emailAuth, setEmailAuth] = useState("");
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
@@ -23,13 +23,13 @@ function Login () {
 
   const handleLogin = () => {
     
-    if (usernameAuth == "" || passwordAuth == "") {   //Dummy check
+    if (emailAuth == "" || passwordAuth == "") {   //Dummy check
       setInputResponse("Fields required!");
       setLoginStatus(false);
      }
    else
     Axios.post('http://localhost:3001/login', {
-      username: usernameAuth,
+      email: emailAuth,
       password: passwordAuth
     }).then((response)=> {
       if (!response.data.auth) { //checking for response message
@@ -63,13 +63,13 @@ function Login () {
         <h1>Welcome to Walido.com</h1>
         </div>
 
-        <label>Username</label>
+        <label>Email</label>
         <input 
         type="text" 
         required
         autoFocus
         onChange={(event) => {
-          setUsernameAuth(event.target.value);
+          setEmailAuth(event.target.value);
         }}
         />
         <label>Password</label>

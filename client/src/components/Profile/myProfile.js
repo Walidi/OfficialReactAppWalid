@@ -1,6 +1,6 @@
 import React, { Component, useEffect} from 'react';
 import Axios from 'axios';
-import './myAccount.css'
+import './myProfile.css'
 import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import {
@@ -12,7 +12,7 @@ import {
   NavBtnLink
 } from '../NavBar/NavbarElements';
 
-class myAccount extends Component {
+class myProfile extends Component {
 
     state = {
         users: [],
@@ -59,14 +59,11 @@ class myAccount extends Component {
       </NavLink>
       <Bars />
       <NavMenu>
-        <NavLink to='/services' activeStyle>
-          Services (NOT READY)
+        <NavLink to='/candidates' activeStyle>
+          Candidates (NOT READY)
         </NavLink>
-        <NavLink to='/contact-us' activeStyle>
-          Contact Us (NOT READY)
-        </NavLink>
-        <NavLink to='/myAccount' activeStyle>
-          My account
+        <NavLink to='/myProfile' activeStyle>
+          My profile
         </NavLink>
       </NavMenu>
       <NavBtn>
@@ -88,4 +85,4 @@ class myAccount extends Component {
   }
 };
 
-export default withRouter(myAccount);
+export default withRouter(myProfile);

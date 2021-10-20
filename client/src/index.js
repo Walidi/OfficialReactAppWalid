@@ -5,7 +5,7 @@ import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import RegistrationConfirmed from './components/Confirmation/RegistrationConfirmed'
 import Home from './components/Home/Home';
-import myAccount from './components/Account/myAccount';
+import myProfile from './components/Profile/myProfile';
 import ProtectedRoute from './ProtectedRoute';
 
 import { AuthContext } from './components/Context/AuthContext';
@@ -40,7 +40,7 @@ function App () {           //Exact path = Beginning page of the site
       <Route path ="/Confirmation" component={RegistrationConfirmed}/>
     
       <ProtectedRoute path="/home" component ={Home} authStatus = {authStatus}/>
-      <ProtectedRoute path = "/myAccount" component={myAccount} authStatus = {authStatus}/>
+      <ProtectedRoute path = "/myProfile" component={myProfile} authStatus = {authStatus}/>
       </Switch>
   </Router>
     )
