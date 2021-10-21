@@ -59,7 +59,7 @@ class Home extends Component {
       <Bars />
       <NavMenu>
         <NavLink to='candidates' activeStyle>
-          Candidates (NOT READY)
+          Candidates 
         </NavLink>
         <NavLink to='/myProfile' activeStyle>
           My Profile

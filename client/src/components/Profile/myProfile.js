@@ -60,10 +60,10 @@ class myProfile extends Component {
       <Bars />
       <NavMenu>
         <NavLink to='/candidates' activeStyle>
-          Candidates (NOT READY)
+          Candidates 
         </NavLink>
         <NavLink to='/myProfile' activeStyle>
-          My profile
+          My Profile
         </NavLink>
       </NavMenu>
       <NavBtn>
@@ -72,8 +72,7 @@ class myProfile extends Component {
       </Nav>
       </div>
       <div>
-      <section className="Home">
-          <p>WTF MAN</p>
+    <section className="Home">
     <div className="Container">
     <p>{localStorage.getItem("userID")}</p>
     <p>THIS IS YOUR ACCOUNT!</p>
