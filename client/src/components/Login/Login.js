@@ -37,9 +37,7 @@ function Login () {
        setLoginStatus(false);
       } else {
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
-           localStorage.setItem("userID", response.data.result[0].id); //Current users id     
            setLoginStatus(true);
-
            {loginStatus && goToHomeScreen()};
       }
     });
