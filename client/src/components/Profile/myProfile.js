@@ -49,7 +49,6 @@ class myProfile extends Component {
 
   render() {
     return (
-
       <>
       <div>
       <Nav>
@@ -59,7 +58,7 @@ class myProfile extends Component {
       </NavLink>
       <Bars />
       <NavMenu>
-        <NavLink to='/candidates' activeStyle>
+        <NavLink to='candidates' activeStyle>
           Candidates 
         </NavLink>
         <NavLink to='/myProfile' activeStyle>
@@ -71,14 +70,20 @@ class myProfile extends Component {
       </NavBtn>
       </Nav>
       </div>
-      <div>
-    <section className="Home">
-    <div className="Container">
-    <p>{localStorage.getItem("userID")}</p>
-    <p>THIS IS YOUR ACCOUNT!</p>
-    </div>
-    </section>
-    </div>    
+
+      <div class="container">
+      <h1 class="header">Your account</h1>
+        <img class="ui small centered circular image" src="<%= data.avatar %>"/>
+        <label class ="label">Name</label>
+              <input type="text" name="name" value=""/>
+        <label class ="label">Email</label>
+              <input type="text" name="email" value=""/>
+         <label class ="label">Location</label>
+              <input class = "field" type="text" name="location" value=""/>
+          <label class ="label">Bio</label>
+              <textarea name="bio" rows="4" cols="40"></textarea>
+            <button class="ui right floated  orange button" type="submit">Update</button>
+      </div>
     </>
     );
   }
