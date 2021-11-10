@@ -9,12 +9,12 @@ import myProfile from './components/Profile/myProfile';
 import ProtectedRoute from './ProtectedRoute';
 
 import { AuthContext } from './components/Context/AuthContext';
+import { CurrentUser } from './components/Context/CurrentUserContext';
 import Axios from 'axios';
 
 function App () {           //Exact path = Beginning page of the site
 
   const [authStatus, setAuthStatus] = useState(AuthContext);
-
   const userAuthToken = localStorage.getItem('token'); 
   
   useEffect(() => { //Stay logged in, if user is logged in, after refresh

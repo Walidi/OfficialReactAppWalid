@@ -4,6 +4,7 @@ import './Login.css';
 import  { useHistory } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
 import logo from '../../images/logo.png';
+import { CurrentUserId } from '../Context/CurrentUserContext';
 
 function Login () {
  
@@ -12,6 +13,7 @@ function Login () {
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
   const [inputResponse, setInputResponse] = useState("");
+  const [currentUserID, setCurrentUserID] = useState(CurrentUserId)
 
   const history = useHistory();
 
@@ -38,6 +40,8 @@ function Login () {
       } else {
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
            setLoginStatus(true);
+           setCurrentUserID(response.data.result[0].id)
+           console.log(currentUserID)
            {loginStatus && goToHomeScreen()};
       }
     });
