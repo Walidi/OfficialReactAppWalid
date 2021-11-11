@@ -12,9 +12,9 @@ function Login () {
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
-  const [inputResponse, setInputResponse] = useState("");
-  const [currentUserID, setCurrentUserID] = useState(CurrentUserId)
+  const [currentUserID, setCurrentUserID] = useContext(CurrentUserId);
 
+  const [inputResponse, setInputResponse] = useState("");
   const history = useHistory();
 
   const goToHomeScreen=() => {
@@ -40,8 +40,8 @@ function Login () {
       } else {
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
            setLoginStatus(true);
-           setCurrentUserID(response.data.result[0].id)
-           console.log(currentUserID)
+           setCurrentUserID(response.data.result[0].id);
+           console.log("Current user id is: " + currentUserID);
            {loginStatus && goToHomeScreen()};
       }
     });
@@ -52,7 +52,6 @@ function Login () {
     }
     
   return (
-
     <section className="Login">
     <div>
     <img style={{flex:1, height: 80, width: 90, marginTop: 10}}
@@ -95,7 +94,6 @@ function Login () {
     </section>
   );
  }
-
  export default Login;
 
 
