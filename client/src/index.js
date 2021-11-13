@@ -25,16 +25,17 @@ function App () {           //Exact path = Beginning page of the site
       if (!response.data.auth) { //checking for response message
         setAuthStatus(false); //Login status is set
         console.log("NOT LOGGED IN!");
-        console.log(currentUserID);
+        console.log("No user: "  + currentUserID);
        } else {
         setAuthStatus(true);  
         console.log("LOGGED IN!");
-        console.log(currentUserID);
+        console.log("Current user: "+ currentUserID);
        }
     })
   }, [])
 
   return (
+    <CurrentUserId.Provider value = {[currentUserID, setCurrentUserID]}>
     <AuthContext.Provider value={[authStatus, setAuthStatus]}>
   <Router>
     <Switch>
@@ -48,6 +49,7 @@ function App () {           //Exact path = Beginning page of the site
   </Router>
     )
     </AuthContext.Provider>
+    </CurrentUserId.Provider>
   );
   };
 render(<App />, document.getElementById('root'));

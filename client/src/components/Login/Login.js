@@ -14,6 +14,7 @@ function Login () {
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
   const [currentUserID, setCurrentUserID] = useContext(CurrentUserId);
 
+
   const [inputResponse, setInputResponse] = useState("");
   const history = useHistory();
 
@@ -24,6 +25,7 @@ function Login () {
   Axios.defaults.withCredentials = true; 
 
   const handleLogin = () => {
+    
     
     if (emailAuth == "" || passwordAuth == "") {   //Dummy check
       setInputResponse("Fields required!");
@@ -38,11 +40,12 @@ function Login () {
        setInputResponse(response.data.message);
        setLoginStatus(false);
       } else {
+
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
            setLoginStatus(true);
            setCurrentUserID(response.data.result[0].id);
+           {loginStatus && goToHomeScreen()};     
            console.log("Current user id is: " + currentUserID);
-           {loginStatus && goToHomeScreen()};
       }
     });
   };
