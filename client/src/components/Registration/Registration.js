@@ -67,7 +67,7 @@ class Registration extends Component {
     }
 
     if (this.state.phonenrReg.length < 8) {
-      this.setState({phonenrInputStatus: "Valid phonenumber required!"});
+      this.setState({phonenrInputStatus: "Valid phone number required!"});
       inputStatusOk = false;
      }
 

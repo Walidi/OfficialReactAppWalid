@@ -23,6 +23,7 @@ function App () {           //Exact path = Beginning page of the site
       token: userAuthToken
     }).then(response => {
       if (!response.data.auth) { //checking for response message
+        setCurrentUserID(0);
         setAuthStatus(false); //Login status is set
         console.log("NOT LOGGED IN!");
         console.log("No user: "  + currentUserID);
@@ -35,21 +36,21 @@ function App () {           //Exact path = Beginning page of the site
   }, [])
 
   return (
-    <CurrentUserId.Provider value = {[currentUserID, setCurrentUserID]}>
     <AuthContext.Provider value={[authStatus, setAuthStatus]}>
   <Router>
     <Switch>
+    <CurrentUserId.Provider value={[currentUserID, setCurrentUserID]}>
       <Route exact path="/" component={Login} />
       <Route path="/Registration" component={Registration} />
       <Route path ="/Confirmation" component={RegistrationConfirmed}/>
     
       <ProtectedRoute path="/home" component ={Home} authStatus = {authStatus}/>
       <ProtectedRoute path = "/myProfile" component={myProfile} authStatus = {authStatus}/>
+      </CurrentUserId.Provider>
       </Switch>
   </Router>
     )
     </AuthContext.Provider>
-    </CurrentUserId.Provider>
   );
   };
 render(<App />, document.getElementById('root'));

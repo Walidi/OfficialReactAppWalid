@@ -1,8 +1,9 @@
-import React, { Component, useEffect} from 'react';
+import React, { Component, useEffect, useState} from 'react';
 import Axios from 'axios';
 import './Home.css'
 import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
+import { AuthContext } from '../Context/AuthContext';
 import {
   Nav,
   NavLink,
@@ -17,15 +18,22 @@ class Home extends Component {
     state = {
         users: [],
         isLoaded: false,
+        auth: true
     }
-      
+
+    componentDidUpdate(prevProps, prevState) {
+      console.log(this.state) // Logs new state.
+    }
+
     handleLogOut =() => {
-
-        localStorage.clear();
-        sessionStorage.clear();
-        this.props.history.push('/');
-      }
-
+      
+      console.log(this.state.auth);
+      localStorage.clear();
+      sessionStorage.clear();
+      this.setState({ auth: false }); //Here it stays 'true' up until refresh ?
+      this.props.history.push("/");
+    };
+  
       getUsers = () => {
         Axios.get("http://localhost:3001/users", {
           
@@ -46,9 +54,9 @@ class Home extends Component {
           }) 
         };
 
-
   render() {
     return (
+      <AuthContext.Provider value={this.state.auth}>
       <>
       <div>
       <Nav>
@@ -84,9 +92,8 @@ class Home extends Component {
     </div>
 
     </section>
-  
     </>
-    
+    </AuthContext.Provider>
     );
   }
 };
