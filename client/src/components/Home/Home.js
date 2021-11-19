@@ -1,9 +1,10 @@
-import React, { Component, useEffect, useState} from 'react';
+import React, { Component, useContext, useEffect, useState} from 'react';
 import Axios from 'axios';
 import './Home.css'
 import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import { AuthContext } from '../Context/AuthContext';
+import  { useHistory } from 'react-router-dom';
 import {
   Nav,
   NavLink,
@@ -13,38 +14,36 @@ import {
   NavBtnLink
 } from '../NavBar/NavbarElements';
 
-class Home extends Component {
 
-    state = {
-        users: [],
-        isLoaded: false,
-        auth: true
-    }
+function Home () {
 
-    componentDidUpdate(prevProps, prevState) {
-      console.log(this.state) // Logs new state.
-    }
+    const [users, setUsers] = useState([]);
+    const [auth, setAuth] = useContext(AuthContext);
+    const history = useHistory();
 
-    handleLogOut =() => {
+    useEffect(() => { //Ensuring we cannot go back to Home page when logged out! Already done with protected routing, but double security :D
+      console.log(auth);
+      if (auth==false) {
+        history.push('/');}
+      }); 
+
+    const handleLogOut =() => {
       
-      console.log(this.state.auth);
+      setAuth(false);
       localStorage.clear();
       sessionStorage.clear();
-      this.setState({ auth: false }); //Here it stays 'true' up until refresh ?
-      this.props.history.push("/");
+      history.push('/');
     };
   
-      getUsers = () => {
+    const getUsers = () => {
         Axios.get("http://localhost:3001/users", {
           
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
         }).then((response) => {
-            this.setState({
-                users: response.data, 
-                isLoaded: true
-            })
+            setUsers( response.data, 
+            )
         }).catch(error => {
             console.log({
               error,  
@@ -54,9 +53,8 @@ class Home extends Component {
           }) 
         };
 
-  render() {
     return (
-      <AuthContext.Provider value={this.state.auth}>
+      <AuthContext.Provider value={auth}>
       <>
       <div>
       <Nav>
@@ -74,7 +72,7 @@ class Home extends Component {
         </NavLink>
       </NavMenu>
       <NavBtn>
-        <NavBtnLink to ="/" onClick={this.handleLogOut}>Log out</NavBtnLink>
+        <NavBtnLink to ="/" onClick={handleLogOut}>Log out</NavBtnLink>
       </NavBtn>
       </Nav>
       </div>
@@ -83,11 +81,11 @@ class Home extends Component {
     <div className="Container">
     <p>{localStorage.getItem("userID")}</p>
     <div className="buttonContainer">
-       <button onClick = {this.getUsers}>Get users!</button>
+       <button onClick = {getUsers}>Get users!</button>
       <div>
-      {this.state.users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
+      {users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
       </div>
-      <button onClick = {this.handleLogOut}>Log out</button>
+      <button onClick = {handleLogOut}>Log out</button>
     </div>
     </div>
 
@@ -96,6 +94,5 @@ class Home extends Component {
     </AuthContext.Provider>
     );
   }
-};
 
 export default withRouter(Home);

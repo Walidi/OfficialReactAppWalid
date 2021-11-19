@@ -18,8 +18,8 @@ function Login () {
   const [inputResponse, setInputResponse] = useState("");
   const history = useHistory();
 
-  useEffect(() => {
-    if (loginStatus!=false) {
+  useEffect(() => {   //Ensuring we cannot go back to login page when authenticated!
+    if (loginStatus==true) {
       history.push('/home');}
     }); 
 
@@ -61,7 +61,7 @@ function Login () {
     }
     
   return (
-    <CurrentUserId.Provider value={[currentUserID, setCurrentUserID]}>
+    <AuthContext.Provider value={[loginStatus, setLoginStatus]}>
     <section className="Login">
     <div>
     <img style={{flex:1, height: 80, width: 90, marginTop: 10}}
@@ -102,7 +102,7 @@ function Login () {
         </div>
       </div>
     </section>
-    </CurrentUserId.Provider>
+    </AuthContext.Provider>
   );
  }
  export default Login;

@@ -3,6 +3,8 @@ import Axios from 'axios';
 import './myProfile.css'
 import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
+import { useHistory } from 'react-router';
+import { AuthContext } from '../Context/AuthContext';
 import {
   Nav,
   NavLink,
@@ -13,43 +15,27 @@ import {
 } from '../NavBar/NavbarElements';
 import { CurrentUser } from '../Context/CurrentUserContext';
 
-class myProfile extends Component {
+function myProfile () {
 
-    state = {
-        users: [],
-        isLoaded: false
-    }
+  
+  useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
+    console.log(auth);
+    if (auth==false) {
+      history.push('/');}
+    }); 
+
+  const history = useHistory();
+  const [auth, setAuth] = useContext(AuthContext);
       
-    handleLogOut =() => {
-
+  const handleLogOut =() => {
+        setAuth(false);
         localStorage.clear();
         sessionStorage.clear();
-        this.props.history.push('/');
+        history.push('/');
       }
-
-      getUsers = () => {
-        Axios.get("http://localhost:3001/users", {
-          
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-        }).then((response) => {
-            this.setState({
-                users: response.data, 
-                isLoaded: true
-            })
-        }).catch(error => {
-            console.log({
-              error,  
-              'error response': error.response
-            })
-            alert('Server error!')
-          }) 
-        };
-
-
-  render() {
+      
     return (
+      <AuthContext.Provider value={auth}>
       <>
       <div>
       <Nav>
@@ -67,7 +53,7 @@ class myProfile extends Component {
         </NavLink>
       </NavMenu>
       <NavBtn>
-        <NavBtnLink to ="/" onClick={this.handleLogOut}>Log out</NavBtnLink>
+        <NavBtnLink to ="/" onClick={handleLogOut}>Log out</NavBtnLink>
       </NavBtn>
       </Nav>
       </div>
@@ -86,8 +72,8 @@ class myProfile extends Component {
             <button class="ui right floated  orange button" type="submit">Update</button>
       </div>
     </>
+    </AuthContext.Provider>
     );
-  }
 };
 
 export default withRouter(myProfile);
