@@ -9,28 +9,27 @@ import myProfile from './components/Profile/myProfile';
 import ProtectedRoute from './ProtectedRoute';
 
 import { AuthContext } from './components/Context/AuthContext';
-import { CurrentUserId } from './components/Context/CurrentUserContext';
+import { CurrentUser } from './components/Context/CurrentUserContext';
 import Axios from 'axios';
 
 function App () {           //Exact path = Beginning page of the site
 
   const [authStatus, setAuthStatus] = useState(AuthContext);
   const userAuthToken = localStorage.getItem('token'); 
-  const [currentUserID, setCurrentUserID] = useState(CurrentUserId);
+  const [currentUser, setCurrentUser] = useState(CurrentUser);
   
   useEffect(() => { //Stay logged in, if user is logged in, after refresh
     Axios.post("http://localhost:3001/isUserAuth", {   //End-point for creation request
       token: userAuthToken
     }).then(response => {
       if (!response.data.auth) { //checking for response message
-        setCurrentUserID(0);
         setAuthStatus(false); //Login status is set
         console.log("NOT LOGGED IN!");
-        console.log("No user: "  + currentUserID);
+        console.log("No user: "  + currentUser);
        } else {
         setAuthStatus(true);  
         console.log("LOGGED IN!");
-        console.log("Current user: "+ currentUserID);
+        console.log("Current user: "+ currentUser);
        }
     })
   }, [])
@@ -39,14 +38,14 @@ function App () {           //Exact path = Beginning page of the site
     <AuthContext.Provider value={[authStatus, setAuthStatus]}>
   <Router>
     <Switch>
-    <CurrentUserId.Provider value={[currentUserID, setCurrentUserID]}>
+    <CurrentUser.Provider value={[currentUser, setCurrentUser]}>
       <Route exact path="/" component={Login} />
       <Route path="/Registration" component={Registration} />
       <Route path ="/Confirmation" component={RegistrationConfirmed}/>
     
       <ProtectedRoute path="/home" component ={Home} authStatus = {authStatus}/>
       <ProtectedRoute path = "/myProfile" component={myProfile} authStatus = {authStatus}/>
-      </CurrentUserId.Provider>
+      </CurrentUser.Provider>
       </Switch>
   </Router>
     )

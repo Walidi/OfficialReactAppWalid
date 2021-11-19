@@ -4,7 +4,7 @@ import './Login.css';
 import  { useHistory } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
 import logo from '../../images/logo.png';
-import { CurrentUserId } from '../Context/CurrentUserContext';
+import { CurrentUser} from '../Context/CurrentUserContext';
 
 function Login () {
  
@@ -12,7 +12,7 @@ function Login () {
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
-  const [currentUserID, setCurrentUserID] = useContext(CurrentUserId);
+  const [currentUser, setCurrentUser] = useContext(CurrentUser);
 
 
   const [inputResponse, setInputResponse] = useState("");
@@ -49,8 +49,8 @@ function Login () {
            {loginStatus && goToHomeScreen()}; 
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
            setLoginStatus(true);
-           setCurrentUserID(response.data.result);
-           console.log("Current user id is: " + currentUserID);
+           setCurrentUser(response.data.result);
+           console.log("Current user is: " + currentUser);
   
       }
     });
