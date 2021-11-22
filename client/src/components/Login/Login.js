@@ -42,14 +42,14 @@ function Login () {
       password: passwordAuth
     }).then((response)=> {
       if (!response.data.auth) { //checking for response message
-       setInputResponse(response.data.message);
+       setInputResponse(response.data.message);    
        setLoginStatus(false);
       } else {
        
            {loginStatus && goToHomeScreen()}; 
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
            setLoginStatus(true);
-           setCurrentUser(response.data.result);
+           setCurrentUser(response.data.result[0].id);    //response.data.result[0].id
            console.log("Current user is: " + currentUser);
   
       }

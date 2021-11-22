@@ -1,36 +1,39 @@
-import React, { Component } from 'react';
+import React, {useContext, useEffect,useState} from 'react';
 import Axios from 'axios';
 import validator from 'validator'
 import './Registration.css'
 import  { useHistory } from 'react-router-dom';
+import { AuthContext } from '../Context/AuthContext';
 
-class Registration extends Component {
+function Registration () {
 
-  state = {
-    emailReg: "",
-    nameReg: "",
-    passwordReg1: "",
-    passWordReg2: "",
-    phonenrReg: "",
-    emailInputStatus: "",
-    nameInputStatus: "",
-    password1InputStatus: "",
-    password2InputStatus: "",
-    phonenrInputStatus: ""
-  }
+  const [emailReg, setEmailReg] = useState("");
+  const [nameReg, setNameReg] = useState("");
+  const [passwordReg1, setPasswordReg1] = useState("");
+  const [passwordReg2, setPasswordReg2] = useState("");
+  const [phonenrReg, setPhonenrReg] = useState("");
+  const [emailInputStatus, setEmailInputStatus] = useState("");
+  const [nameInputStatus, setNameInputStatus] = useState("");
+  const [password1InputStatus, setPassword1InputStatus] = useState("");
+  const [password2InputStatus, setPassword2InputStatus] = useState("");
+  const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
+  const [auth] = useContext(AuthContext);
 
-  componentDidMount() {                 //Resetting passwords after the checks so the states update fast thru this
-    this.setState({passwordReg1: ""});
-    this.setState({passwordReg2: ""});
-  }
+  const history = useHistory();
 
-  maxLengthCheck = (object) => {
+  useEffect(() => {   //Ensuring we cannot go back to login page when authenticated!
+    if (auth==true) {
+      history.push('/home');
+    } 
+    }); 
+
+  const maxLengthCheck = (object) => {
     if (object.target.value.length > object.target.maxLength) {
      object.target.value = object.target.value.slice(0, object.target.maxLength)
       }
     }
 
-    checkEmail = (email) => {
+  const checkEmail = (email) => {
       if (email != "" && validator.isEmail(email)) {
         return true;
       }
@@ -39,66 +42,65 @@ class Registration extends Component {
       }
     }
 
-  goBackToLogin =() => {
-    this.props.history.push('/');
-  }
+  const goBackToLogin =() => {
+    history.push('/');
+   }
 
-  goToConfirmationScreen=() => {
-    this.props.history.push('/confirmation');
-  }
+  const goToConfirmationScreen=() => {
+    history.push('/confirmation');
+   }
 
-  handleRegistration = () => {
+  const handleRegistration = () => {
 
-    this.setState({emailInputStatus: ""});         //Resetting the input-statuses so we can set them again on-press
-    this.setState({nameInputStatus: ""});
-    this.setState({password1InputStatus: ""});
-    this.setState({password2InputStatus: ""});
-    this.setState({phonenrInputStatus: ""});
+    setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
+    setNameInputStatus("");
+    setPassword1InputStatus("");
+    setPassword2InputStatus("");
+    setPhonenrInputStatus("");
 
     let inputStatusOk = true;
 
-    if (this.state.nameReg == "") {
-      this.setState({nameInputStatus: "Name required!"})
-      inputStatusOk = false;
+    if (nameReg == "") {
+     setNameInputStatus("Name required!");
+       inputStatusOk = false;
     }
-   else if (this.state.nameReg.length < 3) {
-      this.setState({nameInputStatus: "Name must be at least 3 characters!"})
+   else if (nameReg.length < 3) {
+      setNameInputStatus("Name must be at least 3 characters!");
       inputStatusOk = false;
     }
 
-    if (this.state.phonenrReg.length < 8) {
-      this.setState({phonenrInputStatus: "Valid phone number required!"});
+    if (phonenrReg.length < 8) {
+      setPhonenrInputStatus("Vald phone number required!");
       inputStatusOk = false;
      }
 
-    if (this.checkEmail(this.state.emailReg) == false) {
-      this.setState({emailInputStatus: "Valid email required!"})
+    if (checkEmail(emailReg) == false) {
+      setEmailInputStatus("Vald email required!");
       inputStatusOk = false;
     }
 
-
-    if (this.state.passwordReg1 == "") {
-      this.setState({password1InputStatus: "Password required!"})
+    if (passwordReg1 == "") {
+      setPassword1InputStatus("Password required!");
       inputStatusOk = false;
     }
 
-    else if (this.state.passwordReg1 != this.state.passWordReg2) {
-      this.setState({password2InputStatus: "Passwords do not match!"})
+    else if (passwordReg1 != passwordReg2) {
+      setPassword2InputStatus("Passwords do not match!");
       inputStatusOk = false;
     }
 
-   else if (this.state.passwordReg1.length<5) {
-      this.setState({password1InputStatus: "Password must at least be 5 characters!"})
+   else if (passwordReg1.length<5) {
+      setPassword1InputStatus("Password must at least be 5 characters!");
       inputStatusOk = false;
     }
 
-    if (inputStatusOk){   //If input status is true I.E no input errors - We send post request!
+    if (inputStatusOk) {   //If input status is true I.E no input errors - We send post request!
 
     Axios.post("http://localhost:3001/register", {   //End-point for creation request
-      email: this.state.emailReg,
-      name: this.state.nameReg, 
-      password: this.state.passwordReg1,
-      phoneNr: this.state.phonenrReg
+      email: emailReg,
+      name:  nameReg, 
+      password: passwordReg1,
+      phoneNr: phonenrReg
 
     }).then(response => {
       if (response.data.message) {    //If the response from server returns us the message of "User already exists" we alert here!
@@ -106,7 +108,7 @@ class Registration extends Component {
       }
       else {
       //alert('Success!'); //Navigate to "Login" or "Confirmation page of the registration"
-      this.goToConfirmationScreen();
+      goToConfirmationScreen();
       }
     })
     .catch(error => {
@@ -119,7 +121,6 @@ class Registration extends Component {
   }
   };
 
-  render() {
     return (
 
     <section className="Registration">
@@ -135,10 +136,10 @@ class Registration extends Component {
         required
         autoFocus
         onChange={(event) => {
-          this.setState({nameReg: event.target.value});
+          setNameReg(event.target.value);
         }}
         />
-        <p className="errorMsg">{this.state.nameInputStatus}</p>
+        <p className="errorMsg">{nameInputStatus}</p>
 
          <label>Phone number</label>
         <input 
@@ -146,12 +147,12 @@ class Registration extends Component {
         required
         autoFocus
         maxLength = "8" 
-        onInput={this.maxLengthCheck} 
+        onInput={maxLengthCheck} 
         onChange={(event) => {
-          this.setState({phonenrReg: event.target.value});
+          setPhonenrReg(event.target.value);
         }}
         />
-        <p className="errorMsg">{this.state.phonenrInputStatus}</p>
+        <p className="errorMsg">{phonenrInputStatus}</p>
 
         <label>Email</label>
         <input 
@@ -159,11 +160,11 @@ class Registration extends Component {
         required
         autoFocus
         onChange={(event) => {
-          this.setState({emailReg: event.target.value});
+          setEmailReg(event.target.value);
         }}
         />
 
-        <p className="errorMsg">{this.state.emailInputStatus}</p>
+        <p className="errorMsg">{emailInputStatus}</p>
 
         <label>Password</label>
         <input 
@@ -171,10 +172,10 @@ class Registration extends Component {
         required
         autoFocus
         onChange={(event) => {
-          this.setState({passwordReg1: event.target.value});
+          setPasswordReg1(event.target.value);
         }}
         />
-        <p className="errorMsg">{this.state.password1InputStatus}</p>
+        <p className="errorMsg">{password1InputStatus}</p>
 
         <label>Repeat password</label>
         <input 
@@ -182,22 +183,21 @@ class Registration extends Component {
         required
         autoFocus
         onChange={(event) => {
-          this.setState({passWordReg2: event.target.value});
+          setPasswordReg2(event.target.value);
         }}
         />
-        <p className="errorMsg">{this.state.password2InputStatus}</p>
+        <p className="errorMsg">{password2InputStatus}</p>
 
         <div className="buttonContainer">
-        <button onClick={this.handleRegistration}> Register </button>
+        <button onClick={handleRegistration}> Register </button>
         <p>
             Already have an account?
-            <span onClick={this.goBackToLogin}>Login here!</span>
+            <span onClick={goBackToLogin}>Login here!</span>
         </p>
         </div>
       </div>
     </section>
     );
-  }
 };
 
 export default Registration;

@@ -24,6 +24,7 @@ function App () {           //Exact path = Beginning page of the site
     }).then(response => {
       if (!response.data.auth) { //checking for response message
         setAuthStatus(false); //Login status is set
+        setCurrentUser(0);
         console.log("NOT LOGGED IN!");
         console.log("No user: "  + currentUser);
        } else {
