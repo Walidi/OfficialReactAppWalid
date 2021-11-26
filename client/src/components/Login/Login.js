@@ -4,7 +4,6 @@ import './Login.css';
 import  { useHistory } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
 import logo from '../../images/logo.png';
-import { CurrentUser} from '../Context/CurrentUserContext';
 
 function Login () {
  
@@ -12,7 +11,6 @@ function Login () {
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
-  const [currentUser, setCurrentUser] = useContext(CurrentUser);
 
 
   const [inputResponse, setInputResponse] = useState("");
@@ -44,13 +42,14 @@ function Login () {
       if (!response.data.auth) { //checking for response message
        setInputResponse(response.data.message);    
        setLoginStatus(false);
-      } else {
+      } 
+      else {    //SUCCESS! 
        
            {loginStatus && goToHomeScreen()}; 
-           localStorage.setItem("token", response.data.token); //Json web token is set to users local storage  
+           localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
            setLoginStatus(true);
-           setCurrentUser(response.data.result[0].id);    //response.data.result[0].id
-           console.log("Current user is: " + currentUser);
+          // setCurrentUser(response.data.result);    //response.data.result[0].id
+           //console.log("Current user is: " + currentUser);
   
       }
     });
@@ -61,7 +60,6 @@ function Login () {
     }
     
   return (
-    <AuthContext.Provider value={[loginStatus, setLoginStatus]}>
     <section className="Login">
     <div>
     <img style={{flex:1, height: 80, width: 90, marginTop: 10}}
@@ -102,7 +100,6 @@ function Login () {
         </div>
       </div>
     </section>
-    </AuthContext.Provider>
   );
  }
  export default Login;

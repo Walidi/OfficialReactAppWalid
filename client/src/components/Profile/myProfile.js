@@ -13,7 +13,6 @@ import {
   NavBtn,
   NavBtnLink
 } from '../NavBar/NavbarElements';
-import { CurrentUser } from '../Context/CurrentUserContext';
 
 function myProfile () {
 
@@ -35,7 +34,6 @@ function myProfile () {
       }
       
     return (
-      <AuthContext.Provider value={auth}>
       <>
       <div>
       <Nav>
@@ -72,7 +70,6 @@ function myProfile () {
             <button class="ui right floated  orange button" type="submit">Update</button>
       </div>
     </>
-    </AuthContext.Provider>
     );
 };
 

@@ -34,6 +34,22 @@ function Home () {
       sessionStorage.clear();
       history.push('/');
     };
+
+    const test =() => {
+
+      Axios.get("http://localhost:3001/login", {
+
+      }).then((response) => {
+      //console.log(response.data.loggedIn)
+      console.log(response.data.user);
+  }).catch(error => {
+      console.log({
+        error,  
+        'error response': error.response
+      })
+      alert('Server error!')
+    }); 
+  };
   
     const getUsers = () => {
         Axios.get("http://localhost:3001/users", {
@@ -54,7 +70,6 @@ function Home () {
         };
 
     return (
-      <AuthContext.Provider value={auth}>
       <>
       <div>
       <Nav>
@@ -86,12 +101,13 @@ function Home () {
       {users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
       </div>
       <button onClick = {handleLogOut}>Log out</button>
+      <button onClick = {test}>Login test</button>
+
     </div>
     </div>
 
     </section>
     </>
-    </AuthContext.Provider>
     );
   }
 

@@ -35,7 +35,7 @@ app.use(
     }
   }));
 
-const db = mysql.createConnection({
+const db = mysql.createConnection({  //Consider putting these values into environment variables 
      user: "webapptest2300",
      host: "den1.mysql4.gear.host",
      password: "Ww74!ab!fL6B",
