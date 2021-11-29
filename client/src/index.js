@@ -13,34 +13,48 @@ import Axios from 'axios';
 function App () {           //Exact path = Beginning page of the site
 
   const [authStatus, setAuthStatus] = useState(AuthContext);
-  const userAuthToken = localStorage.getItem('token'); 
   
   useEffect(() => { //Stay logged in, if user is logged in, after refresh
-    Axios.post("http://localhost:3001/isUserAuth", {   //End-point for creation request
-      token: userAuthToken
-    }).then(response => {
+
+    const token = localStorage.getItem('token');
+
+    Axios.post("http://localhost:3001/authenticate", {  //End-point for creation request
+    token: token, 
+    },{withCredentials: true}).then(response => {
       if (!response.data.auth) { //checking for response message
         setAuthStatus(false); //Login status is set
+        //localStorage.clear();
         console.log("NOT LOGGED IN!");
-        //console.log("No user: "  + currentUser);
+        console.log(response.data.user);
        } else {
         setAuthStatus(true);  
         console.log("LOGGED IN!");
-        //console.log("Current user: "+ currentUser);
+        console.log(response.data.user);
        }
     })
-  }/*, Axios.get("http://localhost:3001/login", {
+  }
+  ,[]);
 
-  
-  })*/
-  
-  ,[])
+  /*
+  useEffect(() => { //Stay logged in, if user is logged in, after refresh
+    Axios.get("http://localhost:3001/login", {
+        }).then(response => {
+        console.log('Current user session exists: ' + response.data.loggedIn);
+    }).catch(error => {
+        console.log({
+          error,  
+          'error response': error.response
+        })
+        alert('Server error!')
+      })
+    }
+    ,[]);*/
 
   return (
     <AuthContext.Provider value={[authStatus, setAuthStatus]}>
   <Router>
     <Switch>
-      <Route exact path="/" component={Login} />
+      <Route exact={true} path="/" component={Login} />
       <Route path="/Registration" component={Registration} />
       <Route path ="/Confirmation" component={RegistrationConfirmed}/>
       <ProtectedRoute path="/home" component ={Home} authStatus = {authStatus}/>

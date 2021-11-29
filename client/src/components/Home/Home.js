@@ -32,15 +32,25 @@ function Home () {
       setAuth(false);
       localStorage.clear();
       sessionStorage.clear();
+      deleteCookie();
       history.push('/');
     };
 
+
+    const deleteCookie = () => {
+      Axios.get("http://localhost:3001/logout", {
+
+      }).then((response => {
+      console.log(response);
+      }
+      ));
+  }
+
     const test =() => {
 
-      Axios.get("http://localhost:3001/login", {
-
+      Axios.post("http://localhost:3001/authenticate", {
+        token: localStorage.getItem('token')
       }).then((response) => {
-      //console.log(response.data.loggedIn)
       console.log(response.data.user);
   }).catch(error => {
       console.log({
@@ -50,6 +60,7 @@ function Home () {
       alert('Server error!')
     }); 
   };
+
   
     const getUsers = () => {
         Axios.get("http://localhost:3001/users", {
@@ -101,8 +112,7 @@ function Home () {
       {users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
       </div>
       <button onClick = {handleLogOut}>Log out</button>
-      <button onClick = {test}>Login test</button>
-
+      <button onClick = {test}>Test session data</button>
     </div>
     </div>
 

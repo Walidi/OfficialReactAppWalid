@@ -48,7 +48,7 @@ function Login () {
            {loginStatus && goToHomeScreen()}; 
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
            setLoginStatus(true);
-          // setCurrentUser(response.data.result);    //response.data.result[0].id
+          // setCurrentUser(response.data.user);    //response.data.user[0].id
            //console.log("Current user is: " + currentUser);
   
       }
