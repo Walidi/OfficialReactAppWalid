@@ -43,6 +43,23 @@ const db = mysql.createConnection({  //Consider putting these values into enviro
      database: "webapptest2300",
 });
 
+const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
+  const token = req.headers['x-access-token']
+
+  if (!token) {//If there isnt any token
+    res.send('Token needed!');
+  } else {
+    jwt.verify(token, "jwtSecret", (err, decoded) => {
+         if (err) {
+           res.send({auth: false, message: 'Authentication failed!'});
+         } else { //Else if user is verified
+           req.userID = decoded.id; //Token/id is saved
+           next();
+         }
+    });
+  }
+};
+
 app.post('/register', (req, res) => {
 
      const email = req.body.email;
@@ -87,7 +104,7 @@ app.post('/login', async(req, res) => {
   email,
   (err, result) => {
    if (err)  {
-       res.json({err: err}) //Sending error to front-end
+       res.send({err: err}) //Sending error to front-end
     } 
 
    if (result.length>0) { //Checking if username input returns a row
@@ -98,40 +115,23 @@ app.post('/login', async(req, res) => {
              expiresIn: 300,
            })
            req.session.user = result; //Creating session for the user!
-           res.json({auth: true, token: token, user: result}); //Passing authenticated user   (result = row = user)
+           res.send({auth: true, token: token, user: result}); //Passing authenticated user   (result = row = user)
 
           } else { //If there is no response, it means the password is wrong but username is correct!
-            res.json({auth: false, message: "Wrong email/password!"});
+            res.send({auth: false, message: "Wrong email/password!"});
           }
        })
      } else {    //If nothing is matched from the inputs!
-       res.json({auth: false, message: "User does not exist!"});
+       res.send({auth: false, message: "User does not exist!"});
        }
   }
 );
 });
 
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.send("Logout success!");
+  req.session.destroy();  //Kills session
+  res.send("Logout success!"); //Sends response to client
 });
-
-const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
-  const token = req.headers['x-access-token']
-
-  if (!token) {//If there isnt any token
-    res.send('Token needed!');
-  } else {
-    jwt.verify(token, "jwtSecret", (err, decoded) => {
-         if (err) {
-           res.send({auth: false, message: 'Authentication failed!'});
-         } else { //Else if user is verified
-           req.userID = decoded.id; //Token/id is saved
-           next();
-         }
-    });
-  }
-};
 
 app.post('/authenticate', (req, res) => { //An endpoint for user-auth
 
