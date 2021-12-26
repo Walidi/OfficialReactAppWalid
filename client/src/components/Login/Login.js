@@ -4,6 +4,7 @@ import './Login.css';
 import  { useHistory } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
 import logo from '../../images/logo.png';
+import { UserContext } from '../Context/UserContext';
 
 function Login () {
  
@@ -11,6 +12,7 @@ function Login () {
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
+  const [currentUser, setCurrentUser] = useContext(UserContext);
 
 
   const [inputResponse, setInputResponse] = useState("");
@@ -47,11 +49,8 @@ function Login () {
        
            {loginStatus && goToHomeScreen()}; 
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
-           setLoginStatus(true);
-           console.log(response.data.user);
-          // setCurrentUser(response.data.user);    //response.data.user[0].id
-           //console.log("Current user is: " + currentUser);
-  
+           setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
+           setCurrentUser(response.data.user);
       }
     });
   };

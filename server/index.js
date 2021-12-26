@@ -36,11 +36,16 @@ app.use(
     }
   }));
 
-const db = mysql.createConnection({  //Consider putting these values into environment variables 
+const db = mysql.createPool({  //Consider putting these values into environment variables 
      user: "webapptest2300",
      host: "den1.mysql4.gear.host",
      password: "Ww74!ab!fL6B",
      database: "webapptest2300",
+});
+
+db.query('SELECT 1 + 1 AS solution', function (error, results, fields) {  //Keeps pool/connection alive
+  if (error) throw error;
+  console.log('The solution is: ', results[0].solution);
 });
 
 const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
@@ -112,7 +117,7 @@ app.post('/login', async(req, res) => {
           if (response) { //If the password input matches the hashed password, the user is logged in!
            const id = result[0].id; //Getting id of the first user of the list of users (the user retrieved)
            const token = jwt.sign({id}, "jwtSecret", { //Verifies token from user's id
-             expiresIn: 300,
+             expiresIn: '1h',
            })
            req.session.user = result; //Creating session for the user!
            res.send({auth: true, token: token, user: result}); //Passing authenticated user   (result = row = user)
@@ -149,7 +154,7 @@ app.post('/authenticate', (req, res) => { //An endpoint for user-auth
       console.log(userSession[0].name + ' is in!');
     }
     else   { //Else if user is not verified, we return an empty object with rejected authentication 
-    res.send({auth: false, user: userSession});
+    res.send({auth: false, user: 'No user session!'});
     console.log('No user session');
     }
 })

@@ -9,10 +9,12 @@ import myProfile from './components/Profile/myProfile';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthContext } from './components/Context/AuthContext';
 import Axios from 'axios';
+import { UserContext } from './components/Context/UserContext';
 
 function App () {           //Exact path = Beginning page of the site
 
   const [authStatus, setAuthStatus] = useState(AuthContext);
+  const [currentUser, setCurrentUser] = useState(UserContext);
   
   useEffect(() => { //Stay logged in, if user is logged in, after refresh
 
@@ -22,12 +24,14 @@ function App () {           //Exact path = Beginning page of the site
     token: token, 
     },{withCredentials: true}).then(response => {
       if (!response.data.auth) { //checking for response message
-        setAuthStatus(false); //Login status is set
+        setAuthStatus(false); //Login status is 
+        setCurrentUser(null);
         //localStorage.clear();
         console.log("NOT LOGGED IN!");
         console.log(response.data.user);
        } else {
         setAuthStatus(true);  
+        setCurrentUser(response.data.user)
         console.log("LOGGED IN!");
         console.log(response.data.user);
        }
@@ -35,24 +39,10 @@ function App () {           //Exact path = Beginning page of the site
   }
   ,[]);
 
-  /*
-  useEffect(() => { //Stay logged in, if user is logged in, after refresh
-    Axios.get("http://localhost:3001/login", {
-        }).then(response => {
-        console.log('Current user session exists: ' + response.data.loggedIn);
-    }).catch(error => {
-        console.log({
-          error,  
-          'error response': error.response
-        })
-        alert('Server error!')
-      })
-    }
-    ,[]);*/
-
   return (
-    <AuthContext.Provider value={[authStatus, setAuthStatus]}>
-  <Router>
+  <AuthContext.Provider value={[authStatus, setAuthStatus]}>
+  <UserContext.Provider value ={[currentUser, setCurrentUser]}>
+    <Router>
     <Switch>
       <Route exact={true} path="/" component={Login} />
       <Route path="/Registration" component={Registration} />
@@ -60,8 +50,9 @@ function App () {           //Exact path = Beginning page of the site
       <ProtectedRoute path="/home" component ={Home} authStatus = {authStatus}/>
       <ProtectedRoute path = "/myProfile" component={myProfile} authStatus = {authStatus}/>
       </Switch>
-  </Router>
-    </AuthContext.Provider>
+   </Router>
+  </UserContext.Provider>
+  </AuthContext.Provider>
   );
   };
 render(<App />, document.getElementById('root'));

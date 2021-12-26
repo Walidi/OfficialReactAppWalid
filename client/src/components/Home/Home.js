@@ -13,55 +13,38 @@ import {
   NavBtn,
   NavBtnLink
 } from '../NavBar/NavbarElements';
+import { UserContext } from '../Context/UserContext';
 
 
 function Home () {
 
     const [users, setUsers] = useState([]);
     const [auth, setAuth] = useContext(AuthContext);
+    const [currentUser, setCurrentUser] = useContext(UserContext);
     const history = useHistory();
 
     useEffect(() => { //Ensuring we cannot go back to Home page when logged out! Already done with protected routing, but double security :D
       console.log(auth);
+      console.log('Current user is:' + currentUser);
       if (auth==false) {
         history.push('/');}
       }); 
 
-    const handleLogOut =() => {
-      
+    const handleLogOut = () => {
       setAuth(false);
+      setCurrentUser(null);
       localStorage.clear();
       sessionStorage.clear();
-      deleteCookie();
-      history.push('/');
-    };
 
-
-    const deleteCookie = () => {
       Axios.get("http://localhost:3001/logout", {
 
       }).then((response => {
       console.log(response);
       }
       ));
+      history.push('/');
   }
 
-    const test =() => {
-
-      Axios.post("http://localhost:3001/authenticate", {
-        token: localStorage.getItem('token')
-      }).then((response) => {
-      console.log(response.data.user);
-  }).catch(error => {
-      console.log({
-        error,  
-        'error response': error.response
-      })
-      alert('Server error!')
-    }); 
-  };
-
-  
     const getUsers = () => {
         Axios.get("http://localhost:3001/users", {
           
@@ -112,7 +95,6 @@ function Home () {
       {users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
       </div>
       <button onClick = {handleLogOut}>Log out</button>
-      <button onClick = {test}>Test session data</button>
     </div>
     </div>
 
