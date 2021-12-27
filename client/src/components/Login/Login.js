@@ -14,7 +14,6 @@ function Login () {
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
   const [currentUser, setCurrentUser] = useContext(UserContext);
 
-
   const [inputResponse, setInputResponse] = useState("");
   const history = useHistory();
 

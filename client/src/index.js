@@ -33,7 +33,7 @@ function App () {           //Exact path = Beginning page of the site
         setAuthStatus(true);  
         setCurrentUser(response.data.user)
         console.log("LOGGED IN!");
-        console.log(response.data.user);
+        //console.log(response.data.user);
        }
     })
   }
