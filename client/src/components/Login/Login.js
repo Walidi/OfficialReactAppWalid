@@ -49,7 +49,7 @@ function Login () {
            {loginStatus && goToHomeScreen()}; 
            localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
            setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
-           setCurrentUser(response.data.user);
+           setCurrentUser(JSON.stringify(response.data.user));
       }
     });
   };

@@ -26,14 +26,12 @@ function App () {           //Exact path = Beginning page of the site
       if (!response.data.auth) { //checking for response message
         setAuthStatus(false); //Login status is 
         setCurrentUser(null);
-        //localStorage.clear();
+        localStorage.clear();
         console.log("NOT LOGGED IN!");
-        console.log(response.data.user);
        } else {
         setAuthStatus(true);  
-        setCurrentUser(response.data.user)
+        setCurrentUser(JSON.stringify(response.data.user))
         console.log("LOGGED IN!");
-        //console.log(response.data.user);
        }
     })
   }
