@@ -5,6 +5,7 @@ import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import { useHistory } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
+import { UserContext } from '../Context/UserContext';
 import {
   Nav,
   NavLink,
@@ -16,16 +17,25 @@ import {
 
 function myProfile () {
 
-  
   useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
     console.log(auth);
+    console.log("Current User is: " + nameValue);
     if (auth==false) {
       history.push('/');}
     }); 
 
   const history = useHistory();
   const [auth, setAuth] = useContext(AuthContext);
-      
+
+  const {id, name, email, cvFile, bachelorDegree, masterDegree, phoneNr} = useContext(UserContext);
+  const [idValue, setIdValue] = id;
+  const [nameValue, setNameValue] = name;
+  const [emailValue, setEmailValue] = email;
+  const [cvFileValue, setCvFileValue] = cvFile;
+  const [bachelorDegreeValue, setBachelorDegreeValue] = bachelorDegree;
+  const [masterDegreeValue, setMasterDegreeValue] = masterDegree;
+  const [phoneNrValue, setPhoneNrValue] = phoneNr;
+          
   const handleLogOut =() => {
         setAuth(false);
         localStorage.clear();

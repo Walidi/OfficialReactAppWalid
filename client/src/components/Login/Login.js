@@ -12,7 +12,15 @@ function Login () {
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
-  const [currentUser, setCurrentUser] = useContext(UserContext);
+  
+  const {id, name, email, cvFile, bachelorDegree, masterDegree, phoneNr} = useContext(UserContext);
+  const [idValue, setIdValue] = id;
+  const [nameValue, setNameValue] = name;
+  const [emailValue, setEmailValue] = email;
+  const [cvFileValue, setCvFileValue] = cvFile;
+  const [bachelorDegreeValue, setBachelorDegreeValue] = bachelorDegree;
+  const [masterDegreeValue, setMasterDegreeValue] = masterDegree;
+  const [phoneNrValue, setPhoneNrValue] = phoneNr;
 
   const [inputResponse, setInputResponse] = useState("");
   const history = useHistory();
@@ -47,9 +55,15 @@ function Login () {
       else {    //SUCCESS! 
        
            {loginStatus && goToHomeScreen()}; 
-           localStorage.setItem("token", response.data.token); //Json web token is set to users local storage
+           localStorage.setItem("token", response.data.token); //Json web token is set to user's local storage
            setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
-           setCurrentUser(JSON.stringify(response.data.user));
+           setIdValue(JSON.stringify(response.data.user[0].id));
+           setNameValue(JSON.stringify(response.data.user[0].name));
+           setEmailValue(JSON.stringify(response.data.user[0].email));
+           setCvFileValue(JSON.stringify(response.data.user[0].cvFile));
+           setBachelorDegreeValue(JSON.stringify(response.data.user[0].bachelorDegree));
+           setMasterDegreeValue(JSON.stringify(response.data.user[0].masterDegree));
+           setPhoneNrValue(JSON.stringify(response.data.user[0].phoneNr));
       }
     });
   };
@@ -102,5 +116,3 @@ function Login () {
   );
  }
  export default Login;
-
-

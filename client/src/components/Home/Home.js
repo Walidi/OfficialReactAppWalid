@@ -20,19 +20,22 @@ function Home () {
 
     const [users, setUsers] = useState([]);
     const [auth, setAuth] = useContext(AuthContext);
-    const [currentUser, setCurrentUser] = useContext(UserContext);
+
+    const {id, name, email, cvFile, bachelorDegree, masterDegree, phoneNr} = useContext(UserContext);
+    const [nameValue] = name;
+    
     const history = useHistory();
 
     useEffect(() => { //Ensuring we cannot go back to Home page when logged out! Already done with protected routing, but double security :D
       console.log(auth);
-      console.log('Current user is:' + currentUser);
+      console.log('Current user is:' + nameValue);
       if (auth==false) {
         history.push('/');}
       }); 
 
     const handleLogOut = () => {
       setAuth(false);
-      setCurrentUser(null);
+      //setCurrentUser(null);
       localStorage.clear();
       sessionStorage.clear();
 
