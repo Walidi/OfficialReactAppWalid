@@ -12,15 +12,7 @@ function Login () {
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
-  
-  const {id, name, email, cvFile, bachelorDegree, masterDegree, phoneNr} = useContext(UserContext);
-  const [idValue, setIdValue] = id;
-  const [nameValue, setNameValue] = name;
-  const [emailValue, setEmailValue] = email;
-  const [cvFileValue, setCvFileValue] = cvFile;
-  const [bachelorDegreeValue, setBachelorDegreeValue] = bachelorDegree;
-  const [masterDegreeValue, setMasterDegreeValue] = masterDegree;
-  const [phoneNrValue, setPhoneNrValue] = phoneNr;
+  const user = useContext(UserContext);
 
   const [inputResponse, setInputResponse] = useState("");
   const history = useHistory();
@@ -57,13 +49,14 @@ function Login () {
            {loginStatus && goToHomeScreen()}; 
            localStorage.setItem("token", response.data.token); //Json web token is set to user's local storage
            setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
-           setIdValue(JSON.stringify(response.data.user[0].id));
-           setNameValue(JSON.stringify(response.data.user[0].name));
-           setEmailValue(JSON.stringify(response.data.user[0].email));
-           setCvFileValue(JSON.stringify(response.data.user[0].cvFile));
-           setBachelorDegreeValue(JSON.stringify(response.data.user[0].bachelorDegree));
-           setMasterDegreeValue(JSON.stringify(response.data.user[0].masterDegree));
-           setPhoneNrValue(JSON.stringify(response.data.user[0].phoneNr));
+
+           user.setId(JSON.stringify(response.data.user[0].id));
+           user.setName(JSON.stringify(response.data.user[0].name));
+           user.setEmail(JSON.stringify(response.data.user[0].email));
+           user.setCvFile(JSON.stringify(response.data.user[0].cvFile));
+           user.setBachelorDegree(JSON.stringify(response.data.user[0].bachelorDegree));
+           user.setMasterDegree(JSON.stringify(response.data.user[0].masterDegree));
+           user.setPhoneNr(JSON.stringify(response.data.user[0].phoneNr));
       }
     });
   };

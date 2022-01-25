@@ -19,7 +19,7 @@ function myProfile () {
 
   useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
     console.log(auth);
-    console.log("Current User is: " + nameValue);
+    console.log("Current User is: " + user.name);
     if (auth==false) {
       history.push('/');}
     }); 
@@ -27,14 +27,8 @@ function myProfile () {
   const history = useHistory();
   const [auth, setAuth] = useContext(AuthContext);
 
-  const {id, name, email, cvFile, bachelorDegree, masterDegree, phoneNr} = useContext(UserContext);
-  const [idValue, setIdValue] = id;
-  const [nameValue, setNameValue] = name;
-  const [emailValue, setEmailValue] = email;
-  const [cvFileValue, setCvFileValue] = cvFile;
-  const [bachelorDegreeValue, setBachelorDegreeValue] = bachelorDegree;
-  const [masterDegreeValue, setMasterDegreeValue] = masterDegree;
-  const [phoneNrValue, setPhoneNrValue] = phoneNr;
+  const user = useContext(UserContext);
+
           
   const handleLogOut =() => {
         setAuth(false);
