@@ -4,33 +4,18 @@ export const UserContext = createContext();
 
 // This context provider is passed to any component requiring the context
 export const UserProvider = ({ children }) => {
-  const [id, setId] = useState();
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [cvFile, setCvFile] = useState();
-  const [bachelorDegree, setBachelorDegree] = useState();
-  const [masterDegree, setMasterDegree] = useState();
-  const [phoneNr, setPhoneNr] = useState();
+  const [user, setUser] = useState({
+    id: 0,
+    name: "",
+    email: "",
+    cvFile: "",
+    bachelorDegree: "",
+    masterDegree: "",
+    phoneNr: 0
+  });
 
   return (
-    <UserContext.Provider
-      value={{
-        id,
-        name,
-        email,
-        cvFile,
-        bachelorDegree,
-        masterDegree,
-        phoneNr,
-        setId,
-        setName,
-        setEmail,
-        setCvFile, 
-        setBachelorDegree,
-        setMasterDegree, 
-        setPhoneNr
-      }}
-    >
+    <UserContext.Provider value={{user, setUser}}>
       {children}
     </UserContext.Provider>
   );

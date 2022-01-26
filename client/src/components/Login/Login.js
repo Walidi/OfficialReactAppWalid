@@ -12,7 +12,7 @@ function Login () {
   const [passwordAuth, setPasswordAuth] = useState("");
 
   const [loginStatus, setLoginStatus] = useContext(AuthContext);
-  const user = useContext(UserContext);
+  const {setUser} = useContext(UserContext);
 
   const [inputResponse, setInputResponse] = useState("");
   const history = useHistory();
@@ -50,13 +50,10 @@ function Login () {
            localStorage.setItem("token", response.data.token); //Json web token is set to user's local storage
            setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
 
-           user.setId(JSON.stringify(response.data.user[0].id));
-           user.setName(JSON.stringify(response.data.user[0].name));
-           user.setEmail(JSON.stringify(response.data.user[0].email));
-           user.setCvFile(JSON.stringify(response.data.user[0].cvFile));
-           user.setBachelorDegree(JSON.stringify(response.data.user[0].bachelorDegree));
-           user.setMasterDegree(JSON.stringify(response.data.user[0].masterDegree));
-           user.setPhoneNr(JSON.stringify(response.data.user[0].phoneNr));
+           setUser({id: JSON.stringify(response.data.user[0].id), name: JSON.stringify(response.data.user[0].name),
+            email: JSON.stringify(response.data.user[0].email), cvFile: JSON.stringify(response.data.user[0].cvFile), 
+            bachelorDegree: JSON.stringify(response.data.user[0].bachelorDegree), masterDegree: JSON.stringify(response.data.user[0].masterDegree),
+            phoneNr: JSON.stringify(response.data.user[0].phoneNr)});
       }
     });
   };

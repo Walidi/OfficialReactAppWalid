@@ -15,15 +15,7 @@ function App () {           //Exact path = Beginning page of the site
 
   const [authStatus, setAuthStatus] = useState(AuthContext);
    
-  const user = useState(UserContext);
-
-  const [id, setId] = useState(user.id);
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [cvFile, setCvFile] = useState(user.cvFile);
-  const [bachelorDegree, setBachelorDegree] = useState(user.bachelorDegree);
-  const [masterDegree, setMasterDegree] = useState(user.masterDegree);
-  const [phoneNr, setPhoneNr] = useState(user.phoneNr);
+  const {setUser} = useContext(UserContext);
  
   useEffect(() => { //Stay logged in, if user is logged in, after refresh
 
@@ -39,14 +31,10 @@ function App () {           //Exact path = Beginning page of the site
        } else {
         setAuthStatus(true);  
         console.log("LOGGED IN!");
-        setId(JSON.stringify(response.data.user[0].id));
-        setName(JSON.stringify(response.data.user[0].name));
-        setEmail(JSON.stringify(response.data.user[0].email));
-        setCvFile(JSON.stringify(response.data.user[0].cvFile));
-        setBachelorDegree(JSON.stringify(response.data.user[0].bachelorDegree));
-        setMasterDegree(JSON.stringify(response.data.user[0].masterDegree));
-        setPhoneNr(JSON.stringify(response.data.user[0].phoneNr));
-        
+        setUser({id: JSON.stringify(response.data.user[0].id), name: JSON.stringify(response.data.user[0].name),
+          email: JSON.stringify(response.data.user[0].email), cvFile: JSON.stringify(response.data.user[0].cvFile), 
+          bachelorDegree: JSON.stringify(response.data.user[0].bachelorDegree), masterDegree: JSON.stringify(response.data.user[0].masterDegree),
+          phoneNr: JSON.stringify(response.data.user[0].phoneNr)});
        }
     })
   }
@@ -54,7 +42,6 @@ function App () {           //Exact path = Beginning page of the site
 
   return (
   <AuthContext.Provider value={[authStatus, setAuthStatus]}>
-    <UserProvider>
     <Router>
     <Switch>
       <Route exact={true} path="/" component={Login} />
@@ -64,11 +51,14 @@ function App () {           //Exact path = Beginning page of the site
       <ProtectedRoute path = "/myProfile" component={myProfile} authStatus = {authStatus}/>
     </Switch>
     </Router>
-    </UserProvider>
   </AuthContext.Provider>
   );
   };
-render(
-<App />, document.getElementById('root') 
-
-);
+  const rootElement = document.getElementById('root');
+  render(
+    // wrap root element with context
+    <UserProvider>
+      <App />
+    </UserProvider>,
+    rootElement
+  );

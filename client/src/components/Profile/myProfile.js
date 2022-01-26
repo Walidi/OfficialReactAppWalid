@@ -27,7 +27,7 @@ function myProfile () {
   const history = useHistory();
   const [auth, setAuth] = useContext(AuthContext);
 
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
 
           
   const handleLogOut =() => {
