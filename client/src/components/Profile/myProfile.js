@@ -1,4 +1,5 @@
-import React, { Component, useContext, useEffect} from 'react';
+import React, { Component, useContext, useState, useEffect} from 'react';
+import { Form, Button, Row, Col } from "react-bootstrap";
 import Axios from 'axios';
 import './myProfile.css'
 import  {withRouter } from 'react-router-dom';
@@ -6,11 +7,12 @@ import logo from '../../images/logo.png';
 import { useHistory } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
 import { UserContext } from '../Context/UserContext';
+
 import {
   Nav,
   NavLink,
   Bars,
-  NavMenu,
+  NavMenu, 
   NavBtn,
   NavBtnLink
 } from '../NavBar/NavbarElements';
@@ -29,6 +31,16 @@ function myProfile () {
 
   const {user} = useContext(UserContext);
 
+  const [emailReg, setEmailReg] = useState("");
+  const [nameReg, setNameReg] = useState("");
+  const [passwordReg1, setPasswordReg1] = useState("");
+  const [passwordReg2, setPasswordReg2] = useState("");
+  const [phonenrReg, setPhonenrReg] = useState("");
+  const [emailInputStatus, setEmailInputStatus] = useState("");
+  const [nameInputStatus, setNameInputStatus] = useState("");
+  const [password1InputStatus, setPassword1InputStatus] = useState("");
+  const [password2InputStatus, setPassword2InputStatus] = useState("");
+  const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
           
   const handleLogOut =() => {
         setAuth(false);
@@ -36,7 +48,14 @@ function myProfile () {
         sessionStorage.clear();
         history.push('/');
       }
-      
+
+  const maxLengthCheck = (object) => {
+        if (object.target.value.length > object.target.maxLength) {
+         object.target.value = object.target.value.slice(0, object.target.maxLength)
+          }
+        }
+
+
     return (
       <>
       <div>
@@ -59,21 +78,72 @@ function myProfile () {
       </NavBtn>
       </Nav>
       </div>
+      <div className="Container">
+        <div className ="title">
+        <h1>View and edit your information!</h1>
+        </div>
+        <label>Full name</label>
+        <input 
+        type="text" 
+        value={user.name}
+        autoFocus
+        onChange={(event) => {
+          setNameReg(event.target.value);
+        }}
+        />
+        <p className="errorMsg">{nameInputStatus}</p>
 
-      <div class="container">
-      <h1 class="header">My Profile</h1>
-        <img class="ui small centered circular image" src=""/>
-        <label class ="label">Name</label>
-              <input class="field" type="text" name="name" value=""/>
-        <label class ="label">Email</label>
-              <input class="field" type="text" name="email" value=""/>
-         <label class ="label">Location</label>
-              <input class="field" type="text" name="location" value=""/>
-          <label class ="label">Bio</label>
-              <textarea name="bio" rows="4" cols="40"></textarea>
-            <button class="ui right floated  orange button" type="submit">Update</button>
+         <label>Phone number</label>
+        <input 
+        type="number"
+        value={user.phoneNr}
+        autoFocus
+        maxLength = "8" 
+        onInput={maxLengthCheck} 
+        onChange={(event) => {
+          setPhonenrReg(event.target.value);
+        }}
+        />
+        <p className="errorMsg">{phonenrInputStatus}</p>
+
+        <label>Email</label>
+        <input
+        type="text" 
+        value={user.email}
+        autoFocus
+        onChange={(event) => {
+          setEmailReg(event.target.value);
+        }}
+        />
+
+        <p className="errorMsg">{emailInputStatus}</p>
+
+        <label>Password</label>
+        <input
+        type="password"
+        autoFocus
+        onChange={(event) => {
+          setPasswordReg1(event.target.value);
+        }}
+        />
+        <p className="errorMsg">{password1InputStatus}</p>
+
+        <label>Repeat password</label>
+        <input 
+        type="password"
+        required
+        autoFocus
+        onChange={(event) => {
+          setPasswordReg2(event.target.value);
+        }}
+        />
+        <p className="errorMsg">{password2InputStatus}</p>
+
+        <div className="buttonContainer">
+        <button> Edit </button>
+        </div>
       </div>
-    </>
+      </>
     );
 };
 

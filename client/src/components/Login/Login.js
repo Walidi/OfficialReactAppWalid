@@ -50,10 +50,16 @@ function Login () {
            localStorage.setItem("token", response.data.token); //Json web token is set to user's local storage
            setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
 
-           setUser({id: JSON.stringify(response.data.user[0].id), name: JSON.stringify(response.data.user[0].name),
-            email: JSON.stringify(response.data.user[0].email), cvFile: JSON.stringify(response.data.user[0].cvFile), 
-            bachelorDegree: JSON.stringify(response.data.user[0].bachelorDegree), masterDegree: JSON.stringify(response.data.user[0].masterDegree),
-            phoneNr: JSON.stringify(response.data.user[0].phoneNr)});
+
+           setUser({
+            id: JSON.stringify(response.data.user[0].id).replace(/["]+/g, ''),
+            name: JSON.stringify(response.data.user[0].name).replace(/["]+/g, ''),
+            email: JSON.stringify(response.data.user[0].email).replace(/["]+/g, ''),
+            cvFile: JSON.stringify(response.data.user[0].cvFile).replace(/["]+/g, ''), 
+            bachelorDegree: JSON.stringify(response.data.user[0].bachelorDegree).replace(/["]+/g, ''),
+            masterDegree: JSON.stringify(response.data.user[0].masterDegree).replace(/["]+/g, ''),
+            phoneNr: JSON.stringify(response.data.user[0].phoneNr).replace(/["]+/g, '')
+          });
       }
     });
   };

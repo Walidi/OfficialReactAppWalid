@@ -31,10 +31,15 @@ function App () {           //Exact path = Beginning page of the site
        } else {
         setAuthStatus(true);  
         console.log("LOGGED IN!");
-        setUser({id: JSON.stringify(response.data.user[0].id), name: JSON.stringify(response.data.user[0].name),
-          email: JSON.stringify(response.data.user[0].email), cvFile: JSON.stringify(response.data.user[0].cvFile), 
-          bachelorDegree: JSON.stringify(response.data.user[0].bachelorDegree), masterDegree: JSON.stringify(response.data.user[0].masterDegree),
-          phoneNr: JSON.stringify(response.data.user[0].phoneNr)});
+        var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+        var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+        var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+        var cvFile = JSON.stringify(response.data.user[0].cvFile);
+        var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree);
+        var masterDegree = JSON.stringify(response.data.user[0].masterDegree)
+        var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+
+        setUser({id: id, name: name, email: email, cvFile: cvFile, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr});
        }
     })
   }
