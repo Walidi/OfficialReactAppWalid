@@ -1,11 +1,5 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Nunito", sans-serif;
-}
 
-.ProfileContainer {
+.profileContainer {
   padding: 60px;
   margin: auto;
   width: 100%;
@@ -16,11 +10,25 @@
   justify-content: center;
   background: radial-gradient(
     ellipse at left bottom,
-    rgba(22, 24, 47, 1) 0%,
-    rgba(38, 20, 72, 0.9) 59%,
-    rgba(17, 27, 75, 0.9) 100%
+    rgb(9, 42, 104) 0%,
+    rgba(56, 72, 20, 0.9) 59%,
+    rgba(17, 75, 62, 0.9) 100%
   )
 } 
+
+.leftContainer {
+  padding-right: 70%;
+  margin: auto;
+  align-content: flex-start;
+
+}
+
+.rightContainer {
+  padding-left: 70%;
+  margin: auto;
+  align-content: flex-end;
+
+}
 
 .title {
   height:100px;
@@ -63,38 +71,7 @@
   background: #603bbb;
   cursor: pointer;
 }
-.buttonContainer {
-  width: 100%;
-  padding: 24px 0;
-}
-.Registration .registrationContainer .errorMsg {
-  color: red;
-  font-size: 15px;
-}
-.Registration .registrationContainer .errorMsg {
-  color: red;
-  font-size: 16px;
-}
-
-.Registration .registrationContainer .buttonContainer p span:hover {
-  color: red;
-}
-.Registration .registrationContainer .buttonContainer p span {
-  color: yellow;
-  font-weight: 500;  
-  letter-spacing: 0.5px;
-  margin-left: 5px;
-  cursor: pointer;
-  transition: all 400ms ease-in-out;
-}
-
-.Registration .registrationContainer .buttonContainer p {
-  margin: 14px 0 0 0;
-  text-align: right;
-  color: #fff;
-}
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.editButtonContainer {
+  width: 20%;
 }
 

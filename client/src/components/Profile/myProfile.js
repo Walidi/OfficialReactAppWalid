@@ -78,10 +78,12 @@ function myProfile () {
       </NavBtn>
       </Nav>
       </div>
-      <div className="Container">
+      <div className="profileContainer">
         <div className ="title">
         <h1>View and edit your information!</h1>
         </div>
+
+        <div className="leftContainer">
         <label>Full name</label>
         <input 
         type="text" 
@@ -92,8 +94,7 @@ function myProfile () {
         }}
         />
         <p className="errorMsg">{nameInputStatus}</p>
-
-         <label>Phone number</label>
+        <label>Phone number</label>
         <input 
         type="number"
         value={user.phoneNr}
@@ -105,7 +106,6 @@ function myProfile () {
         }}
         />
         <p className="errorMsg">{phonenrInputStatus}</p>
-
         <label>Email</label>
         <input
         type="text" 
@@ -115,9 +115,10 @@ function myProfile () {
           setEmailReg(event.target.value);
         }}
         />
-
         <p className="errorMsg">{emailInputStatus}</p>
-
+        </div>
+        
+        <div className="rightContainer">
         <label>Password</label>
         <input
         type="password"
@@ -138,8 +139,9 @@ function myProfile () {
         }}
         />
         <p className="errorMsg">{password2InputStatus}</p>
+        </div>
 
-        <div className="buttonContainer">
+        <div className="editButtonContainer">
         <button> Edit </button>
         </div>
       </div>

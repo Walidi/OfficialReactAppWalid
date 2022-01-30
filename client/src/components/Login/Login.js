@@ -49,17 +49,15 @@ function Login () {
            {loginStatus && goToHomeScreen()}; 
            localStorage.setItem("token", response.data.token); //Json web token is set to user's local storage
            setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
-
-
-           setUser({
-            id: JSON.stringify(response.data.user[0].id).replace(/["]+/g, ''),
-            name: JSON.stringify(response.data.user[0].name).replace(/["]+/g, ''),
-            email: JSON.stringify(response.data.user[0].email).replace(/["]+/g, ''),
-            cvFile: JSON.stringify(response.data.user[0].cvFile).replace(/["]+/g, ''), 
-            bachelorDegree: JSON.stringify(response.data.user[0].bachelorDegree).replace(/["]+/g, ''),
-            masterDegree: JSON.stringify(response.data.user[0].masterDegree).replace(/["]+/g, ''),
-            phoneNr: JSON.stringify(response.data.user[0].phoneNr).replace(/["]+/g, '')
-          });
+           var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+           var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+           var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+           var cvFile = JSON.stringify(response.data.user[0].cvFile);
+           var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree);
+           var masterDegree = JSON.stringify(response.data.user[0].masterDegree)
+           var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+   
+           setUser({id: id, name: name, email: email, cvFile: cvFile, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr});
       }
     });
   };
