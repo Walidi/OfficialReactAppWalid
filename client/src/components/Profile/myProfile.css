@@ -6,7 +6,8 @@
   max-width: 800px;
   min-height: 600px;
   display: flex;
-  flex-direction: column;
+  /*flex-direction: column;*/
+  /*flex-direction: row;*/
   justify-content: center;
   background: radial-gradient(
     ellipse at left bottom,
@@ -17,23 +18,21 @@
 } 
 
 .leftContainer {
-  padding-right: 70%;
   margin: auto;
+  flex-direction: column;
   align-content: flex-start;
-
 }
 
 .rightContainer {
-  padding-left: 70%;
   margin: auto;
+  flex-direction: column;
   align-content: flex-end;
-
 }
 
 .title {
   height:100px;
   width:300x;  
-  align-self: center;
+  padding-bottom: 90%;
 }
 
  .h1 { 

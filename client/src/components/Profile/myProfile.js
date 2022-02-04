@@ -79,6 +79,7 @@ function myProfile () {
       </Nav>
       </div>
       <div className="profileContainer">
+
         <div className ="title">
         <h1>View and edit your information!</h1>
         </div>
