@@ -1,6 +1,4 @@
 import React, { Component, useContext, useState, useEffect} from 'react';
-import { Form, Button, Row, Col } from "react-bootstrap";
-import Axios from 'axios';
 import './myProfile.css'
 import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
@@ -78,74 +76,90 @@ function myProfile () {
       </NavBtn>
       </Nav>
       </div>
-      <div className="profileContainer">
-
-        <div className ="title">
-        <h1>View and edit your information!</h1>
-        </div>
-
-        <div className="leftContainer">
-        <label>Full name</label>
-        <input 
-        type="text" 
-        value={user.name}
-        autoFocus
-        onChange={(event) => {
-          setNameReg(event.target.value);
-        }}
-        />
-        <p className="errorMsg">{nameInputStatus}</p>
-        <label>Phone number</label>
-        <input 
-        type="number"
-        value={user.phoneNr}
-        autoFocus
-        maxLength = "8" 
-        onInput={maxLengthCheck} 
-        onChange={(event) => {
-          setPhonenrReg(event.target.value);
-        }}
-        />
-        <p className="errorMsg">{phonenrInputStatus}</p>
-        <label>Email</label>
-        <input
-        type="text" 
-        value={user.email}
-        autoFocus
-        onChange={(event) => {
-          setEmailReg(event.target.value);
-        }}
-        />
-        <p className="errorMsg">{emailInputStatus}</p>
-        </div>
-        
-        <div className="rightContainer">
-        <label>Password</label>
-        <input
-        type="password"
-        autoFocus
-        onChange={(event) => {
-          setPasswordReg1(event.target.value);
-        }}
-        />
-        <p className="errorMsg">{password1InputStatus}</p>
-
-        <label>Repeat password</label>
-        <input 
-        type="password"
-        required
-        autoFocus
-        onChange={(event) => {
-          setPasswordReg2(event.target.value);
-        }}
-        />
-        <p className="errorMsg">{password2InputStatus}</p>
-        </div>
-
-        <div className="editButtonContainer">
-        <button> Edit </button>
-        </div>
-      </div>
+      <div class="container">
+<div class="row gutters">
+<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+<div class="card h-100">
+	<div class="card-body">
+		<div class="account-settings">
+		</div>
+	</div>
+</div>
+</div>
+<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+<div class="card h-100">
+	<div class="card-body">
+		<div class="row gutters">
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+				<h6 class="mb-2 text-primary">Personal Details</h6>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="fullName">Full Name</label>
+					<input type="text" class="form-control" id="fullName" placeholder="Enter full name"/>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="eMail">Email</label>
+					<input type="email" class="form-control" id="eMail" placeholder="Enter email ID"/>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="phone">Phone</label>
+					<input type="text" class="form-control" id="phone" placeholder="Enter phone number"/>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="website">Website URL</label>
+					<input type="url" class="form-control" id="website" placeholder="Website url"/>
+				</div>
+			</div>
+		</div>
+		<div class="row gutters">
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+				<h6 class="mt-3 mb-2 text-primary">Address</h6>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="Street">Street</label>
+					<input type="name" class="form-control" id="Street" placeholder="Enter Street"/>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="ciTy">City</label>
+					<input type="name" class="form-control" id="ciTy" placeholder="Enter City"/>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="sTate">State</label>
+					<input type="text" class="form-control" id="sTate" placeholder="Enter State"/>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="form-group">
+					<label for="zIp">Zip Code</label>
+					<input type="text" class="form-control" id="zIp" placeholder="Zip Code"/>
+				</div>
+			</div>
+		</div>
+		<div class="row gutters">
+			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+				<div class="text-right">
+					<button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
+					<button type="button" id="submit" name="submit" class="btn btn-primary">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</div>
       </>
     );
 };

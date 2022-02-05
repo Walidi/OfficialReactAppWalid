@@ -41,7 +41,7 @@
     font-family: 'Signika', sans-serif; 
     padding-bottom: 10px; 
  }
-  input {
+  .input {
     width: 100%;
     border: none;
     outline: none;
@@ -51,14 +51,14 @@
     color: #fff;
     letter-spacing: 1px;
   }
-  label {
+  .label {
     color: white;
     margin: 14px 0;
     display: block;
     font-size: 22px;
     line-height: 1;
   }
-  button {
+  .button {
     border: none;
     outline: none;
     width: 100%;

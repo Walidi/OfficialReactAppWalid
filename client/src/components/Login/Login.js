@@ -41,7 +41,7 @@ function Login () {
       password: passwordAuth
     }).then((response)=> {
       if (!response.data.auth) { //checking for response message
-       setInputResponse(response.data.message);    
+       setInputResponse(response.data.message);     
        setLoginStatus(false);
       } 
       else {    //SUCCESS! 
@@ -79,8 +79,8 @@ function Login () {
         <h1>Welcome to Walido.com</h1>
         </div>
 
-        <label>Email</label>
-        <input 
+        <label className='label'>Email</label>
+        <input className='input'
         type="text" 
         required
         autoFocus
@@ -88,8 +88,8 @@ function Login () {
           setEmailAuth(event.target.value);
         }}
         />
-        <label>Password</label>
-        <input 
+        <label className='label'>Password</label>
+        <input className='input'
         type="password"
         required
         autoFocus
@@ -99,7 +99,7 @@ function Login () {
         />
         <p className="errorMsg">{inputResponse}</p>
         <div className="buttonContainer">
-        <button onClick={handleLogin}> Login </button>
+        <button className='button' onClick={handleLogin}> Login </button>
         <p>
             Don't have an account?
             <span onClick={goToRegistration}>Register here!</span>

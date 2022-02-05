@@ -130,8 +130,8 @@ function Registration () {
         <h1>Register yourself here!</h1>
         </div>
 
-        <label>Full name</label>
-        <input 
+        <label className='label'>Full name</label>
+        <input className='input'
         type="text" 
         required
         autoFocus
@@ -141,8 +141,8 @@ function Registration () {
         />
         <p className="errorMsg">{nameInputStatus}</p>
 
-         <label>Phone number</label>
-        <input 
+         <label className='label'>Phone number</label>
+        <input className='input'
         type="number"
         required
         autoFocus
@@ -154,8 +154,8 @@ function Registration () {
         />
         <p className="errorMsg">{phonenrInputStatus}</p>
 
-        <label>Email</label>
-        <input 
+        <label className='label'>Email</label>
+        <input className='input'
         type="text" 
         required
         autoFocus
@@ -166,8 +166,8 @@ function Registration () {
 
         <p className="errorMsg">{emailInputStatus}</p>
 
-        <label>Password</label>
-        <input 
+        <label className='label'>Password</label>
+        <input className='input'
         type="password"
         required
         autoFocus
@@ -177,8 +177,8 @@ function Registration () {
         />
         <p className="errorMsg">{password1InputStatus}</p>
 
-        <label>Repeat password</label>
-        <input 
+        <label className='label'>Repeat password</label>
+        <input className='input'
         type="password"
         required
         autoFocus
@@ -189,7 +189,7 @@ function Registration () {
         <p className="errorMsg">{password2InputStatus}</p>
 
         <div className="buttonContainer">
-        <button onClick={handleRegistration}> Register </button>
+        <button className='button' onClick={handleRegistration}> Register </button>
         <p>
             Already have an account?
             <span onClick={goBackToLogin}>Login here!</span>
