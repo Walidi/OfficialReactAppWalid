@@ -1,12 +1,10 @@
 .profileContainer {
-  padding: 60px;
+  padding: 20px;
   margin: auto;
   width: 100%;
   max-width: 800px;
   min-height: 600px;
   display: flex;
-  /*flex-direction: column;*/
-  /*flex-direction: row;*/
   justify-content: center;
   background: radial-gradient(
     ellipse at left bottom,
@@ -16,22 +14,54 @@
   )
 } 
 
-.titleProfile {
-  height:100px;
-  width:300x;  
-  padding-bottom: 90%;
+.titleContainer {  
+  margin: auto;
+  height: 20px;
+  max-width: 800px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: radial-gradient(
+    rgb(9, 42, 104) 0%,
+    rgba(56, 72, 20, 0.9) 59%,
+    rgba(17, 75, 62, 0.9) 100%
+  )
 }
 
 .leftContainer {
   margin: auto;
+  margin-top: 50px;
   flex-direction: column;
   align-content: flex-start;
+  height: auto;
+  padding: 10px 0;
 }
 
 .rightContainer {
   margin: auto;
+  margin-top: 50px;
   flex-direction: column;
   align-content: flex-end;
+  height: auto;
+  padding: 10px 0;
+}
+
+.label {
+  color: white;
+  margin: 14px 0;
+  display: block;
+  font-size: 18px;
+  line-height: 1;
+}
+.labelValue {
+  color: white;
+  margin: 14px 0;
+  display: block;
+  font-size: 16px;
+  line-height: 1;
+  text-decoration: underline;
+  text-underline-position: under;
+  margin-bottom: 2rem;
 }
 
 .editButtonContainer {

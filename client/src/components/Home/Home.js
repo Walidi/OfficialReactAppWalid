@@ -88,7 +88,7 @@ function Home () {
       </Nav>
       </div>
       <section className="Home">
-          <p>WTF MAN</p>
+          <p>Welcome: {user.name}</p>
     <div className="Container">
     <p>{localStorage.getItem("userID")}</p>
     <div className="buttonContainer">

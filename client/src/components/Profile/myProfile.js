@@ -20,6 +20,8 @@ function myProfile () {
   useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
     console.log(auth);
     console.log("Current User is: " + user.name);
+	bachelorCheck(); //If bachelor's degree isnt set, we write "not set yes"
+	masterCheck();   //If master's degree isnt set, we write "not set yes"
     if (auth==false) {
       history.push('/');}
     }); 
@@ -39,6 +41,9 @@ function myProfile () {
   const [password1InputStatus, setPassword1InputStatus] = useState("");
   const [password2InputStatus, setPassword2InputStatus] = useState("");
   const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
+
+  const [bachelor, setBachelor] = useState();
+  const [master, setMaster] = useState();
           
   const handleLogOut =() => {
         setAuth(false);
@@ -53,6 +58,24 @@ function myProfile () {
           }
         }
 
+  const bachelorCheck = () => {
+
+	  if (user.bachelor == null) {
+		  setBachelor("Bachelor's degree not set");
+	  }
+	  else 
+	  	  setBachelor(user.bachelorDegree);
+	 		
+  }
+
+  const masterCheck = () => {
+
+	if (user.master == null) {
+		  setMaster("Master's degree not set");
+	}
+	else 
+		  setMaster(user.masterDegree)
+  }
 
     return (
       <>
@@ -77,68 +100,26 @@ function myProfile () {
       </Nav>
       </div>
 
-	<div className="profileContainer">
-
-	<div className ="titleProfile">
+	<div className ="titleContainer">
 	<h1>View and edit your information!</h1>
 	</div>
 
+	<div className="profileContainer">
+
 	<div className="leftContainer">
-	<label>Full name</label>
-	<input 
-	type="text" 
-	value={user.name}
-	autoFocus
-	onChange={(event) => {
-  	setNameReg(event.target.value);
-		}}
-	/>
-	<p className="errorMsg">{nameInputStatus}</p>
-	<label>Phone number</label>
-	<input 
-	type="number"
-	value={user.phoneNr}
-	autoFocus
-	maxLength = "8" 
-	onInput={maxLengthCheck} 
-	onChange={(event) => {
-  	setPhonenrReg(event.target.value);
-		}}
-	/>
-	<p className="errorMsg">{phonenrInputStatus}</p>
-	<label>Email</label>
-	<input
-	type="text" 
-	value={user.email}
-	autoFocus
-	onChange={(event) => {
-  	setEmailReg(event.target.value);
-	}}
-	/>
-	<p className="errorMsg">{emailInputStatus}</p>
+	<label className='label'>Full name:</label>
+	<label className='labelValue'>{user.name}</label> 
+	<label className='label'>Email:</label>
+	<label className='labelValue'>{user.email}</label> 
+	<label className='label'>Phone number:</label>
+	<label className='labelValue'>{user.phoneNr}</label> 
 	</div>
 
 	<div className="rightContainer">
-	<label>Password</label>
-	<input
-	type="password"
-	autoFocus
-	onChange={(event) => {
-  	setPasswordReg1(event.target.value);
-		}}
-	/>
-	<p className="errorMsg">{password1InputStatus}</p>
-
-	<label>Repeat password</label>
-	<input 
-	type="password"
-	required
-	autoFocus
-	onChange={(event) => {
-  	setPasswordReg2(event.target.value);
-	}}
-	/>
-	<p className="errorMsg">{password2InputStatus}</p>
+	<label className='label'>Bachelor's Degree:</label>
+	<label className='labelValue'>{bachelor}</label> 
+	<label className='label'>Master's Degree:</label>
+	<label className='labelValue'>{master}</label> 
 	</div>
 
 	<div className="editButtonContainer">
