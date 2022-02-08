@@ -30,6 +30,7 @@ function myProfile () {
   const [auth, setAuth] = useContext(AuthContext);
 
   const {user} = useContext(UserContext);
+  const [showEdit, setShowEdit] = useState(false);
 
   const [emailReg, setEmailReg] = useState("");
   const [nameReg, setNameReg] = useState("");
@@ -77,6 +78,10 @@ function myProfile () {
 		  setMaster(user.masterDegree)
   }
 
+  const handleNewEditClick = () => {
+    setShowEdit(!showEdit) //hides component if shown, reveals if not shown
+   }
+
     return (
       <>
       <div>
@@ -104,8 +109,9 @@ function myProfile () {
 	<h1>View and edit your information!</h1>
 	</div>
 
+  <div>
 	<div className="profileContainer">
-
+   
 	<div className="leftContainer">
 	<label className='label'>Full name:</label>
 	<label className='labelValue'>{user.name}</label> 
@@ -116,15 +122,18 @@ function myProfile () {
 	</div>
 
 	<div className="rightContainer">
-	<label className='label'>Bachelor's Degree:</label>
+	<label className='label'>Bachelor's degree:</label>
 	<label className='labelValue'>{bachelor}</label> 
-	<label className='label'>Master's Degree:</label>
+	<label className='label'>Master's degree:</label>
 	<label className='labelValue'>{master}</label> 
+	</div> 
 	</div>
-	</div>
+
 	<div className="editButtonContainer">
-	<button className='button'> Edit </button>
+	<button className='buttonEdit'> Edit </button>
 	</div>  
+  </div>
+
       </>
     );
 };

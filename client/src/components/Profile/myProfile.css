@@ -22,7 +22,6 @@
   align-items: center;
   text-align: center;
   background: radial-gradient(
-    rgb(9, 42, 104) 0%,
     rgba(56, 72, 20, 0.9) 59%,
     rgba(17, 75, 62, 0.9) 100%
   )
@@ -72,15 +71,14 @@
   max-width: 800px;
   display: flex;
   background: radial-gradient(
-    ellipse at left bottom,
     rgb(9, 42, 104) 0%,
     rgba(56, 72, 20, 0.9) 59%,
     rgba(17, 75, 62, 0.9) 100%
-
   )
 }
-.button {
+.buttonEdit {
   color: #fff;
+  background-color: #5a4fcf;
   font-size: 14px;
   letter-spacing: 1px;
   cursor: pointer;
@@ -90,7 +88,7 @@
   border: 1px solid white;
 }
 
-.button:hover {
+.buttonEdit:hover {
   transition: all 0.2s ease-in-out;
   background: #fff;
   color: #010606;
