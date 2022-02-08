@@ -121,10 +121,9 @@ function myProfile () {
 	<label className='label'>Master's Degree:</label>
 	<label className='labelValue'>{master}</label> 
 	</div>
-
-	<div className="editButtonContainer">
-	<button> Edit </button>
 	</div>
+	<div className="editButtonContainer">
+	<button className='button'> Edit </button>
 	</div>  
       </>
     );
