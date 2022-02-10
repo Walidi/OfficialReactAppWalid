@@ -30,18 +30,12 @@ function myProfile () {
   const [auth, setAuth] = useContext(AuthContext);
 
   const {user} = useContext(UserContext);
-  const [showEdit, setShowEdit] = useState(false);
 
-  const [emailReg, setEmailReg] = useState("");
-  const [nameReg, setNameReg] = useState("");
-  const [passwordReg1, setPasswordReg1] = useState("");
-  const [passwordReg2, setPasswordReg2] = useState("");
-  const [phonenrReg, setPhonenrReg] = useState("");
-  const [emailInputStatus, setEmailInputStatus] = useState("");
-  const [nameInputStatus, setNameInputStatus] = useState("");
-  const [password1InputStatus, setPassword1InputStatus] = useState("");
-  const [password2InputStatus, setPassword2InputStatus] = useState("");
-  const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [phoneNr, setPhoneNr] = useState(user.phoneNr);
+
+  const [showEdit, setShowEdit] = useState(false);
 
   const [bachelor, setBachelor] = useState();
   const [master, setMaster] = useState();
@@ -79,7 +73,15 @@ function myProfile () {
   }
 
   const handleNewEditClick = () => {
-    setShowEdit(!showEdit) //hides component if shown, reveals if not shown
+    setShowEdit(true) //hides component if shown, reveals if not shown
+   }
+
+   const cancel = () => {
+
+   }
+
+   const update = () => {
+
    }
 
     return (
@@ -108,7 +110,7 @@ function myProfile () {
 	<div className ="titleContainer">
 	<h1>View and edit your information!</h1>
 	</div>
-
+  { !showEdit && 
   <div>
 	<div className="profileContainer">
    
@@ -118,7 +120,7 @@ function myProfile () {
 	<label className='label'>Email:</label>
 	<label className='labelValue'>{user.email}</label> 
 	<label className='label'>Phone number:</label>
-	<label className='labelValue'>{user.phoneNr}</label> 
+	<label className='labelValue'>+45 {user.phoneNr}</label> 
 	</div>
 
 	<div className="rightContainer">
@@ -130,10 +132,75 @@ function myProfile () {
 	</div>
 
 	<div className="editButtonContainer">
-	<button className='buttonEdit'> Edit </button>
+	<button className='buttonEdit' onClick={handleNewEditClick}> Edit </button>
 	</div>  
   </div>
+  }
+  
+  { showEdit &&              //Write design for editing here:
+  <div className="editContainer">
+  <div className="leftContainer">
+	<label className='editLabel'>Full name:</label>
+	<input 
+  className="editInput"
+  type="text" 
+  autoFocus 
+  value={name}
+  onChange={(event) => {
+    setName(event.target.value)
+    }}/>
 
+  <label className='editLabel'>Email:</label>
+	<input 
+  className="editInput"
+  type="text" 
+  autoFocus 
+  value={email}
+  onChange={(event) => {
+    setEmail(event.target.value)
+    }}/>
+
+  <label className='editLabel'>Phone number:</label>
+	<input
+  className="editInput" 
+  type="number" 
+  autoFocus 
+  value={phoneNr}
+  onChange={(event) => {
+    setPhoneNr(event.target.value)
+    }}/>
+	</div>
+
+  <div className="rightContainer">
+  <label className='editLabel'>Bachelor's degree:</label>
+  <select name="bachelorDegrees" id="bDegree-select">
+    <option value="">--None--</option>
+    <option value="Law">Law</option>
+    <option value="Mathematics">Mathematics</option>
+    <option value="Medicin">Medicin</option>
+    <option value="Business Administration">Business Administration</option>
+    <option value="Biology">Biology</option>
+    <option value="Economics">Economics</option>
+  </select>
+  
+  <label className='editLabel'>Master's degree:</label>
+  <select name="masterDegrees" id="mDegree-select">
+    <option value="">--None--</option>
+    <option value="Law">Law</option>
+    <option value="Mathematics">Mathematics</option>
+    <option value="Medicin">Medicin</option>
+    <option value="Business Administration">Business Administration</option>
+    <option value="Biology">Biology</option>
+    <option value="Economics">Economics</option>
+  </select>
+  </div>
+
+  <div className="editButtonContainer">
+	<button className='buttonUpdate' onClick={update}> Save changes </button>
+	<button className='buttonCancel' onClick={cancel}> Cancel </button>
+	</div> 
+    </div>
+}
       </>
     );
 };

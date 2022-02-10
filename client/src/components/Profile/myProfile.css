@@ -53,6 +53,16 @@
   line-height: 1;
   font-weight: bold;
 }
+
+.editLabel {
+  color: white;
+  margin: 14px 0;
+  display: block;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: bold;
+}
+
 .labelValue {
   color: white;
   margin: 14px 0;
@@ -87,9 +97,61 @@
   border-radius: 4px;
   border: 1px solid white;
 }
+.buttonUpdate {
+  color: #fff;
+  background-color: #5a4fcf;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  width: 50px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid white;
+}
+.buttonCancel {
+  color: #fff;
+  background-color: #5a4fcf;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  width: 50px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid white;
+}
+
 
 .buttonEdit:hover {
   transition: all 0.2s ease-in-out;
   background: #fff;
   color: #010606;
+}
+
+.editContainer {
+  padding: 20px;
+  margin: auto;
+  width: 100%;
+  max-width: 800px;
+  min-height: 530px;
+  display: flex;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at left bottom,
+    rgb(9, 42, 104) 0%,
+    rgba(56, 72, 20, 0.9) 59%,
+    rgba(17, 75, 62, 0.9) 100%
+  )
+} 
+
+.editInput {
+  width: 100%;
+  font-size: 16px;
+  padding: 1px;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+select {
+  font-size: .9rem;
+  padding: 2px 5px;
+  margin-bottom: 1rem;
 }
