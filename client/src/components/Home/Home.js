@@ -34,7 +34,6 @@ function Home () {
 
     const handleLogOut = () => {
       setAuth(false);
-      //setCurrentUser(null);
       localStorage.clear();
       sessionStorage.clear();
 

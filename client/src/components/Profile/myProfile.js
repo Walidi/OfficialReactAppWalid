@@ -20,8 +20,8 @@ function myProfile () {
   useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
     console.log(auth);
     console.log("Current User is: " + user.name);
-	bachelorCheck(); //If bachelor's degree isnt set, we write "not set yes"
-	masterCheck();   //If master's degree isnt set, we write "not set yes"
+	  bachelorCheck(); //If bachelor's degree isnt set, we write "not set yes"
+  	masterCheck();   //If master's degree isnt set, we write "not set yes"
     if (auth==false) {
       history.push('/');}
     }); 
@@ -31,14 +31,17 @@ function myProfile () {
 
   const {user} = useContext(UserContext);
 
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [phoneNr, setPhoneNr] = useState(user.phoneNr);
-
   const [showEdit, setShowEdit] = useState(false);
 
   const [bachelor, setBachelor] = useState();
   const [master, setMaster] = useState();
+
+  //Values to update/change
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [phoneNr, setPhoneNr] = useState(user.phoneNr);
+  const [newBachelor, setNewBachelor] = useState("");
+  const [newMaster, setNewMaster] = useState("");
           
   const handleLogOut =() => {
         setAuth(false);
@@ -60,7 +63,6 @@ function myProfile () {
 	  }
 	  else 
 	  	  setBachelor(user.bachelorDegree);
-	 		
   }
 
   const masterCheck = () => {
@@ -74,6 +76,9 @@ function myProfile () {
 
   const handleNewEditClick = () => {
     setShowEdit(true) //hides component if shown, reveals if not shown
+    setName(user.name);
+    setEmail(user.email);
+    setPhoneNr(user.phoneNr);
    }
 
    const cancel = () => {
@@ -138,6 +143,7 @@ function myProfile () {
   }
   
   { showEdit &&              //Write design for editing here:
+  <div>
   <div className="editContainer">
   <div className="leftContainer">
 	<label className='editLabel'>Full name:</label>
@@ -162,7 +168,7 @@ function myProfile () {
 
   <label className='editLabel'>Phone number:</label>
 	<input
-  className="editInput" 
+  className="editPhoneNr" 
   type="number" 
   autoFocus 
   value={phoneNr}
@@ -174,7 +180,7 @@ function myProfile () {
   <div className="rightContainer">
   <label className='editLabel'>Bachelor's degree:</label>
   <select name="bachelorDegrees" id="bDegree-select">
-    <option value="">--None--</option>
+    <option value="null">--None--</option>
     <option value="Law">Law</option>
     <option value="Mathematics">Mathematics</option>
     <option value="Medicin">Medicin</option>
@@ -185,7 +191,7 @@ function myProfile () {
   
   <label className='editLabel'>Master's degree:</label>
   <select name="masterDegrees" id="mDegree-select">
-    <option value="">--None--</option>
+    <option value="null">--None--</option>
     <option value="Law">Law</option>
     <option value="Mathematics">Mathematics</option>
     <option value="Medicin">Medicin</option>
@@ -194,12 +200,12 @@ function myProfile () {
     <option value="Economics">Economics</option>
   </select>
   </div>
-
+  </div>
   <div className="editButtonContainer">
 	<button className='buttonUpdate' onClick={update}> Save changes </button>
 	<button className='buttonCancel' onClick={cancel}> Cancel </button>
 	</div> 
-    </div>
+  </div>
 }
       </>
     );
