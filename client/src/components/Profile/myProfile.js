@@ -1,5 +1,6 @@
 import React, { Component, useContext, useState, useEffect} from 'react';
 import './myProfile.css'
+import Axios from 'axios';
 import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import { useHistory } from 'react-router';
@@ -29,7 +30,7 @@ function myProfile () {
   const history = useHistory();
   const [auth, setAuth] = useContext(AuthContext);
 
-  const {user} = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
 
   const [showEdit, setShowEdit] = useState(false);
 
@@ -82,13 +83,29 @@ function myProfile () {
    }
 
    const cancel = () => {
-
+     setShowEdit(false); //If cancelled, we return to profile container
    }
 
    const update = () => {
 
+    Axios.put("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, id: user.id}, 
+    {headers: {"x-access-token": localStorage.getItem("token")}}
+    ).then(
+      (response) => {
+        console.log(response.data.message);
+       
+        //Making sure our currentUser Context in client attains the newly updated data when screens chance
+        var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+        var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+        var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+        var cvFile = JSON.stringify(response.data.user[0].cvFile);
+        var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree);
+        var masterDegree = JSON.stringify(response.data.user[0].masterDegree)
+        var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+        setUser({id: id, name: name, email: email, cvFile: cvFile, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr});
+      }
+    );
    }
-
     return (
       <>
       <div>
@@ -171,6 +188,8 @@ function myProfile () {
   className="editPhoneNr" 
   type="number" 
   autoFocus 
+  maxLength = "8" 
+  onInput={maxLengthCheck} 
   value={phoneNr}
   onChange={(event) => {
     setPhoneNr(event.target.value)

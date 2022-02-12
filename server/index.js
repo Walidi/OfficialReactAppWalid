@@ -17,7 +17,7 @@ app.use(express.json()); //Parsing Json
 
 app.use(cors({   //Parsing origin of the front-end
    origin: ["http://localhost:3000"], 
-   methods: ["GET", "POST"],
+   methods: ["GET", "POST", "PUT"],
    credentials: true   //Allows cookies to be enabled
 }));  
 
@@ -28,9 +28,9 @@ app.use(
   session({
     key: "user_sid",
     secret: "secret",    //Normally this has to be long and complex for security
-    resave: true,
+    resave: false,
     rolling: true,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {  //How long will the cookie live for?
       expires: 60 * 60 * 1000, //Expires after one hour
     }
@@ -163,7 +163,7 @@ app.post('/authenticate', (req, res) => { //An endpoint for user-auth
 
 app.get('/users', verifyJWT, (req, res) => {
 
-  db.query("SELECT id, name, email, phonenr FROM users;", 
+  db.query("SELECT id, name, email, phoneNr FROM users;", 
 
   (err, result) => {
     if (err)  {
@@ -178,6 +178,56 @@ app.get('/users', verifyJWT, (req, res) => {
   }
 });
 });
+
+app.put('/updateMyProfile', verifyJWT, (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const phoneNr = req.body.phoneNr;
+  const id = req.body.id;
+
+  var updated = "UPDATE users set name = ?, email = ?, phoneNr = ? WHERE id = ?;";
+  var retrieved = "SELECT * FROM users WHERE id = ?;";
+
+  db.getConnection(function(err, connection) {
+    if (err) throw err;
+    connection.beginTransaction(function(err) {
+        if (err) {
+            res.send({message: err});
+            throw err;
+        } 
+        connection.query(updated, [name, email, phoneNr, id], function(err, result) {
+                if (err) {
+                    connection.rollback(function() {
+                        res.send({message: err});
+                        throw err;
+                    });
+                } 
+                else 
+                res.send({message: "Update succesfulUPDATE!"});
+                });
+        connection.query(retrieved, (id), function(err, result) {
+                if (err) {
+                    connection.rollback(function() {
+                        res.send({message: err});
+                        throw err;
+                    });
+                } 
+                else
+                res.send({user: result, message: "Update succesfulSELECT!"});  //Result does not return the row. FIX THIS somehow!
+                req.session.user = result; //User session is set to be newly updated user data
+                req.session.save(); //Saved into session
+                });     
+               })
+               connection.commit(function(err) {
+                if (err) { 
+                  connection.rollback(function() {
+                    res.send({message: err});
+                    throw err;
+                  });
+                }
+              });
+              })
+            });
 
 app.listen(3001, () => {
   console.log('\x1b[32m%s\x1b[0m', 'Server running on port 3001!')
