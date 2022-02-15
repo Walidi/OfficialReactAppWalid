@@ -30,7 +30,7 @@ app.use(
     secret: "secret",    //Normally this has to be long and complex for security
     resave: false,
     rolling: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {  //How long will the cookie live for?
       expires: 60 * 60 * 1000, //Expires after one hour
     }
@@ -121,6 +121,7 @@ app.post('/login', async(req, res) => {
            })
            req.session.user = result; //Creating session for the user!
            res.send({auth: true, token: token, user: result}); //Passing authenticated user   (result = row = user)
+           res.end();
 
           } else { //If there is no response, it means the password is wrong but username is correct!
             res.send({auth: false, message: "Wrong email/password!"});
@@ -149,7 +150,7 @@ app.post('/authenticate', (req, res) => { //An endpoint for user-auth
     res.send({auth: false, user: "No valid token!"});
     console.log('No valid token');
     } 
-    else if (userSession) {   //Verified user! < ----------------->     (ISSUE OCCURS HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+    else if (userSession) {   //Verified user! < ----------------->
       res.send({auth: true, user: userSession});
       console.log(userSession[0].name + ' is in!');
     }
@@ -188,46 +189,27 @@ app.put('/updateMyProfile', verifyJWT, (req, res) => {
   var updated = "UPDATE users set name = ?, email = ?, phoneNr = ? WHERE id = ?;";
   var retrieved = "SELECT * FROM users WHERE id = ?;";
 
-  db.getConnection(function(err, connection) {
-    if (err) throw err;
-    connection.beginTransaction(function(err) {
-        if (err) {
-            res.send({message: err});
-            throw err;
-        } 
-        connection.query(updated, [name, email, phoneNr, id], function(err, result) {
-                if (err) {
-                    connection.rollback(function() {
-                        res.send({message: err});
-                        throw err;
-                    });
-                } 
-                else 
-                res.send({message: "Update succesfulUPDATE!"});
-                });
-        connection.query(retrieved, (id), function(err, result) {
-                if (err) {
-                    connection.rollback(function() {
-                        res.send({message: err});
-                        throw err;
-                    });
-                } 
-                else
-                res.send({user: result, message: "Update succesfulSELECT!"});  //Result does not return the row. FIX THIS somehow!
-                req.session.user = result; //User session is set to be newly updated user data
-                req.session.save(); //Saved into session
-                });     
-               })
-               connection.commit(function(err) {
-                if (err) { 
-                  connection.rollback(function() {
-                    res.send({message: err});
-                    throw err;
-                  });
-                }
-              });
-              })
-            });
+  db.query(updated, [name, email, phoneNr, id],  
+    (err, result) => {
+    if (err)  {
+      res.send({message: err}) //Sending error to front-end
+      console.log(err);
+   }
+   else {
+     db.query(retrieved, (id), 
+     (err, result) => {
+      if (err) {
+      res.send({message: err}) //Sending error to front-end
+      console.log(err);
+   } else {
+       req.session.user = result;
+       res.send({user: result, message: "Update succesful!"});
+       console.log("User is now: " + req.session.user[0].name);
+       res.end();
+   }
+  })}
+});
+});
 
 app.listen(3001, () => {
   console.log('\x1b[32m%s\x1b[0m', 'Server running on port 3001!')

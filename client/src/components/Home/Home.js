@@ -93,7 +93,7 @@ function Home () {
     <div className="buttonContainer">
        <button onClick = {getUsers}>Get users!</button>
       <div>
-      {users.map(user => <div>{[user.id, user.name, user.phonenr]}</div>)}    
+      {users.map(user => <div>{[user.id, user.name, user.email, user.phoneNr]}</div>)}    
       </div>
       <button onClick = {handleLogOut}>Log out</button>
     </div>
