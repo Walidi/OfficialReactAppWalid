@@ -88,12 +88,11 @@ function myProfile () {
 
    const update = () => {
 
-    Axios.put("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, id: user.id}, 
-    {headers: {"x-access-token": localStorage.getItem("token")}}
+    Axios.patch("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr}, 
+    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
     ).then(
       (response) => {
-        console.log(response.data.message);
-       
+        alert(response.data.message);
         //Making sure our currentUser Context in client attains the newly updated data when screens chance
         var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
         var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
