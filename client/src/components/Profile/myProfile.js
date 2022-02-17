@@ -34,15 +34,16 @@ function myProfile () {
 
   const [showEdit, setShowEdit] = useState(false);
 
-  const [bachelor, setBachelor] = useState();
-  const [master, setMaster] = useState();
+  const [bachelor, setBachelor] = useState(user.bachelorDegree);
+  const [master, setMaster] = useState(user.masterDegree);
 
   //Values to update/change
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [phoneNr, setPhoneNr] = useState(user.phoneNr);
-  const [newBachelor, setNewBachelor] = useState("");
-  const [newMaster, setNewMaster] = useState("");
+
+  const [newBachelor, setNewBachelor] = useState(user.bachelorDegree);
+  const [newMaster, setNewMaster] = useState(user.masterDegree);
           
   const handleLogOut =() => {
         setAuth(false);
@@ -59,17 +60,17 @@ function myProfile () {
 
   const bachelorCheck = () => {
 
-	  if (user.bachelor == null) {
-		  setBachelor("Bachelor's degree not set");
+	  if (user.bachelorDegree == null || user.bachelorDegree == "null" || user.bachelorDegree == "NULL") {
+		  setBachelor("Not set");
 	  }
 	  else 
-	  	  setBachelor(user.bachelorDegree);
+	  	setBachelor(user.bachelorDegree);
   }
 
   const masterCheck = () => {
 
-	if (user.master == null) {
-		  setMaster("Master's degree not set");
+	if (user.masterDegree == null || user.masterDegree == "null" || user.masterDegree == "NULL") {
+		  setMaster("Not set");
 	}
 	else 
 		  setMaster(user.masterDegree)
@@ -80,7 +81,16 @@ function myProfile () {
     setName(user.name);
     setEmail(user.email);
     setPhoneNr(user.phoneNr);
+    setBachelor(user.bachelorDegree);
+    setMaster(user.masterDegree);
    }
+
+   const handleBachelorChange = (e)  => {
+    setNewBachelor(e.target.value);
+  }
+  const handleMasterChange = (e)  => {
+    setNewMaster(e.target.value);
+  }
 
    const cancel = () => {
      setShowEdit(false); //If cancelled, we return to profile container
@@ -88,20 +98,24 @@ function myProfile () {
 
    const update = () => {
 
-    Axios.patch("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr}, 
+    Axios.patch("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
+    bachelorDegree: newBachelor, masterDegree: newMaster}, 
     {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
     ).then(
       (response) => {
-        alert(response.data.message);
         //Making sure our currentUser Context in client attains the newly updated data when screens chance
         var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
         var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
         var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
         var cvFile = JSON.stringify(response.data.user[0].cvFile);
-        var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree);
-        var masterDegree = JSON.stringify(response.data.user[0].masterDegree)
+        var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
+        var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
         var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
         setUser({id: id, name: name, email: email, cvFile: cvFile, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr});
+
+       alert(response.data.message);  //Sending message from server to user
+       setShowEdit(false);            //Returning to the normal profile view when user click 'ok'
+
       }
     );
    }
@@ -197,27 +211,30 @@ function myProfile () {
 
   <div className="rightContainer">
   <label className='editLabel'>Bachelor's degree:</label>
-  <select name="bachelorDegrees" id="bDegree-select">
-    <option value="null">--None--</option>
+  <select name="bachelorDegrees" defaultValue={bachelor} onChange={handleBachelorChange}>
+    <option value="NULL">--None--</option>
     <option value="Law">Law</option>
     <option value="Mathematics">Mathematics</option>
     <option value="Medicin">Medicin</option>
     <option value="Business Administration">Business Administration</option>
     <option value="Biology">Biology</option>
+    <option value="Finance/Accounting">Finance/Accounting</option>
     <option value="Economics">Economics</option>
   </select>
   
   <label className='editLabel'>Master's degree:</label>
-  <select name="masterDegrees" id="mDegree-select">
-    <option value="null">--None--</option>
+  <select name="masterDegrees" defaultValue={master} onChange={handleMasterChange}>
+    <option value="NULL">--None--</option>
     <option value="Law">Law</option>
     <option value="Mathematics">Mathematics</option>
     <option value="Medicin">Medicin</option>
     <option value="Business Administration">Business Administration</option>
     <option value="Biology">Biology</option>
+    <option value="Finance/Accounting">Finance/Accounting</option>
     <option value="Economics">Economics</option>
   </select>
   </div>
+
   </div>
   <div className="editButtonContainer">
 	<button className='buttonUpdate' onClick={update}> Save changes </button>

@@ -53,7 +53,7 @@ const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
 
   if (!token) {//If there isnt any token
     res.send({message: 'Token needed!'});
-  } else {
+  } else {  //Maybe we should also have a session check here as a user can still get users if session is killed as long as JWT exists?
     jwt.verify(token, "jwtSecret", (err, decoded) => {
          if (err) {
            res.send({auth: false, message: 'Authentication failed!'});
@@ -187,14 +187,14 @@ app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const phoneNr = req.body.phoneNr;
+  const bachelorDegree = req.body.bachelorDegree;
+  const masterDegree = req.body.masterDegree;
   const id = req.session.user[0].id;  //ID from user's session
 
-  console.log("CHECKING ID: " +id);
-
-  var updated = "UPDATE users set name = ?, email = ?, phoneNr = ? WHERE id = ?;";
+  var updated = "UPDATE users set name = ?, email = ?, phoneNr = ?, bachelorDegree = ?, masterDegree = ? WHERE id = ?;";
   var retrieved = "SELECT * FROM users WHERE id = ?;";
 
-  db.query(updated, [name, email, phoneNr, id],  
+  db.query(updated, [name, email, phoneNr, bachelorDegree, masterDegree, id],  
     (err, result) => {
     if (err)  {
       res.send({message: err}) //Sending error to front-end

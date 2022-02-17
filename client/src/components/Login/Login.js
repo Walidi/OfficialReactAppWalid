@@ -53,8 +53,8 @@ function Login () {
            var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
            var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
            var cvFile = JSON.stringify(response.data.user[0].cvFile);
-           var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree);
-           var masterDegree = JSON.stringify(response.data.user[0].masterDegree)
+           var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');;
+           var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
            var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
    
            setUser({id: id, name: name, email: email, cvFile: cvFile, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr});
