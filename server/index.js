@@ -71,6 +71,8 @@ app.post('/register', (req, res) => {
      const password = req.body.password;
      const sirname  = req.body.name;
      const phoneNr  = req.body.phoneNr;
+     const bachelorDegree = req.body.bachelorDegree;
+     const masterDegree = req.body.masterDegree;
 
      db.query("SELECT * FROM users WHERE email = ?", (email),
      (err, result) => {
@@ -86,8 +88,8 @@ app.post('/register', (req, res) => {
           }
 
           db.query(
-            "INSERT INTO users (email, password, name, phoneNr) VALUES (?,?,?,?)", 
-          [email, hash, sirname, phoneNr],
+            "INSERT INTO users (email, password, name, phoneNr, bachelorDegree, masterDegree) VALUES (?,?,?,?,?,?)", 
+          [email, hash, sirname, phoneNr, bachelorDegree, masterDegree],
           (err, result) => {
              res.send({err: err});
              console.log(err);
@@ -191,6 +193,22 @@ app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
   const masterDegree = req.body.masterDegree;
   const id = req.session.user[0].id;  //ID from user's session
 
+  db.query("SELECT * FROM users WHERE email = ?;", (email),
+  (err, result) => {
+  if (result.length>0 && req.session.user[0].email != email) {  
+      res.send({user: req.session.user, message: "Email already in use!"})
+    } 
+    
+  else {
+    
+    db.query("SELECT * FROM users WHERE phoneNr = ?;", (phoneNr),
+    (err, result) => {
+  if(result.length>0 && req.session.user[0].phoneNr != phoneNr) {
+        res.send({user: req.session.user, message: "Phone number already in use!"})
+      }
+   
+   else {
+
   var updated = "UPDATE users set name = ?, email = ?, phoneNr = ?, bachelorDegree = ?, masterDegree = ? WHERE id = ?;";
   var retrieved = "SELECT * FROM users WHERE id = ?;";
 
@@ -201,7 +219,7 @@ app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
       console.log(err);
    }
      if (result) {
-     db.query(retrieved, id, 
+     db.query(retrieved, (id), 
      (err, resultRetrieved) => {
       if (err) {
       res.send({message: err}) //Sending error to front-end
@@ -210,11 +228,12 @@ app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
        req.session.user = resultRetrieved;
        res.send({user: resultRetrieved, message: "Update succesful!"});
        console.log("Session is: " + JSON.stringify(req.session.user));
+       console.log("UPDATE SUCCES!");
        res.end();
    }
   })}
-});
-});
+})};
+})}})});
 
 app.listen(3001, () => {
   console.log('\x1b[32m%s\x1b[0m', 'Server running on port 3001!')

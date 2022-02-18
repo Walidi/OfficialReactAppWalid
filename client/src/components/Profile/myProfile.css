@@ -175,3 +175,7 @@ select {
   padding: 2px 5px;
   margin-bottom: 1rem;
 }
+.errorMsg {
+  color: red;
+  font-size: 12px;
+}

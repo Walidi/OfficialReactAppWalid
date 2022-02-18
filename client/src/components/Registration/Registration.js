@@ -100,7 +100,9 @@ function Registration () {
       email: emailReg,
       name:  nameReg, 
       password: passwordReg1,
-      phoneNr: phonenrReg
+      phoneNr: phonenrReg, 
+      bachelorDegree: "--None--",
+      masterDegree: "--None--"
 
     }).then(response => {
       if (response.data.message) {    //If the response from server returns us the message of "User already exists" we alert here!

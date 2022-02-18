@@ -6,6 +6,7 @@ import logo from '../../images/logo.png';
 import { useHistory } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
 import { UserContext } from '../Context/UserContext';
+import validator from 'validator'
 
 import {
   Nav,
@@ -19,10 +20,6 @@ import {
 function myProfile () {
 
   useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
-    console.log(auth);
-    console.log("Current User is: " + user.name);
-	  bachelorCheck(); //If bachelor's degree isnt set, we write "not set yes"
-  	masterCheck();   //If master's degree isnt set, we write "not set yes"
     if (auth==false) {
       history.push('/');}
     }); 
@@ -34,16 +31,18 @@ function myProfile () {
 
   const [showEdit, setShowEdit] = useState(false);
 
-  const [bachelor, setBachelor] = useState(user.bachelorDegree);
-  const [master, setMaster] = useState(user.masterDegree);
+  const [emailInputStatus, setEmailInputStatus] = useState("");
+  const [nameInputStatus, setNameInputStatus] = useState("");
+  const [password1InputStatus, setPassword1InputStatus] = useState("");
+  const [password2InputStatus, setPassword2InputStatus] = useState("");
+  const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
 
   //Values to update/change
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [phoneNr, setPhoneNr] = useState(user.phoneNr);
-
-  const [newBachelor, setNewBachelor] = useState(user.bachelorDegree);
-  const [newMaster, setNewMaster] = useState(user.masterDegree);
+  const [bachelorDegree, setBachelorDegree] = useState(user.bachelorDegree);
+  const [masterDegree, setMasterDegree] = useState(user.masterDegree);
           
   const handleLogOut =() => {
         setAuth(false);
@@ -56,50 +55,79 @@ function myProfile () {
         if (object.target.value.length > object.target.maxLength) {
          object.target.value = object.target.value.slice(0, object.target.maxLength)
           }
+          else if (object.target.value.lenght < 8) {
+            //Something here to handle inproper Danish phone nr ()
+          }
         }
-
-  const bachelorCheck = () => {
-
-	  if (user.bachelorDegree == null || user.bachelorDegree == "null" || user.bachelorDegree == "NULL") {
-		  setBachelor("Not set");
-	  }
-	  else 
-	  	setBachelor(user.bachelorDegree);
-  }
-
-  const masterCheck = () => {
-
-	if (user.masterDegree == null || user.masterDegree == "null" || user.masterDegree == "NULL") {
-		  setMaster("Not set");
-	}
-	else 
-		  setMaster(user.masterDegree)
-  }
 
   const handleNewEditClick = () => {
     setShowEdit(true) //hides component if shown, reveals if not shown
     setName(user.name);
     setEmail(user.email);
     setPhoneNr(user.phoneNr);
-    setBachelor(user.bachelorDegree);
-    setMaster(user.masterDegree);
+    setBachelorDegree(user.bachelorDegree);
+    setMasterDegree(user.masterDegree);
    }
 
    const handleBachelorChange = (e)  => {
-    setNewBachelor(e.target.value);
+    setBachelorDegree(e.target.value);
   }
   const handleMasterChange = (e)  => {
-    setNewMaster(e.target.value);
+    setMasterDegree(e.target.value);
   }
 
    const cancel = () => {
+    setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
+    setNameInputStatus("");
+    setPassword1InputStatus("");
+    setPassword2InputStatus("");
+    setPhonenrInputStatus("");
      setShowEdit(false); //If cancelled, we return to profile container
    }
 
+   
+  const checkEmail = (email) => {
+    if (email != "" && validator.isEmail(email)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
    const update = () => {
 
+    setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
+    setNameInputStatus("");
+    setPassword1InputStatus("");
+    setPassword2InputStatus("");
+    setPhonenrInputStatus("");
+
+    let inputStatusOk = true;
+
+    if (name == "") {
+     setNameInputStatus("Name required!");
+       inputStatusOk = false;
+    }
+   else if (name.length < 3) {
+      setNameInputStatus("Name must be at least 3 characters!");
+      inputStatusOk = false;
+    }
+
+    if (phoneNr.length < 8) {
+      setPhonenrInputStatus("Vald phone number required!");
+      inputStatusOk = false;
+     }
+
+    if (checkEmail(email) == false) {
+      setEmailInputStatus("Vald email required!");
+      inputStatusOk = false;
+    }
+
+    if (inputStatusOk) {   //If input status is true I.E no input errors - We send post request!
+
     Axios.patch("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
-    bachelorDegree: newBachelor, masterDegree: newMaster}, 
+    bachelorDegree: bachelorDegree, masterDegree: masterDegree}, 
     {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
     ).then(
       (response) => {
@@ -118,7 +146,7 @@ function myProfile () {
 
       }
     );
-   }
+   }};
     return (
       <>
       <div>
@@ -160,9 +188,9 @@ function myProfile () {
 
 	<div className="rightContainer">
 	<label className='label'>Bachelor's degree:</label>
-	<label className='labelValue'>{bachelor}</label> 
+	<label className='labelValue'>{user.bachelorDegree}</label> 
 	<label className='label'>Master's degree:</label>
-	<label className='labelValue'>{master}</label> 
+	<label className='labelValue'>{user.masterDegree}</label> 
 	</div> 
 	</div>
 
@@ -185,6 +213,7 @@ function myProfile () {
   onChange={(event) => {
     setName(event.target.value)
     }}/>
+    <p className="errorMsg">{nameInputStatus}</p>
 
   <label className='editLabel'>Email:</label>
 	<input 
@@ -195,6 +224,7 @@ function myProfile () {
   onChange={(event) => {
     setEmail(event.target.value)
     }}/>
+   <p className="errorMsg">{emailInputStatus}</p>
 
   <label className='editLabel'>Phone number:</label>
 	<input
@@ -207,12 +237,14 @@ function myProfile () {
   onChange={(event) => {
     setPhoneNr(event.target.value)
     }}/>
+   <p className="errorMsg">{phonenrInputStatus}</p>
+
 	</div>
 
   <div className="rightContainer">
   <label className='editLabel'>Bachelor's degree:</label>
-  <select name="bachelorDegrees" defaultValue={bachelor} onChange={handleBachelorChange}>
-    <option value="NULL">--None--</option>
+  <select name="bachelorDegrees" defaultValue={bachelorDegree} onChange={handleBachelorChange}>
+    <option value="--None--">--None--</option>
     <option value="Law">Law</option>
     <option value="Mathematics">Mathematics</option>
     <option value="Medicin">Medicin</option>
@@ -223,8 +255,8 @@ function myProfile () {
   </select>
   
   <label className='editLabel'>Master's degree:</label>
-  <select name="masterDegrees" defaultValue={master} onChange={handleMasterChange}>
-    <option value="NULL">--None--</option>
+  <select name="masterDegrees" defaultValue={masterDegree} onChange={handleMasterChange}>
+    <option value="--None--">--None--</option>
     <option value="Law">Law</option>
     <option value="Mathematics">Mathematics</option>
     <option value="Medicin">Medicin</option>
