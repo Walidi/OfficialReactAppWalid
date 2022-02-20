@@ -106,7 +106,7 @@ function Registration () {
 
     }).then(response => {
       if (response.data.message) {    //If the response from server returns us the message of "User already exists" we alert here!
-      alert('Email already exists - Try another!');
+      alert(response.data.message + " Try another!");
       }
       else {
       //alert('Success!'); //Navigate to "Login" or "Confirmation page of the registration"

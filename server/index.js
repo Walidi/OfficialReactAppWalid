@@ -79,6 +79,13 @@ app.post('/register', (req, res) => {
        if (result.length>0) {  //If the email from the requester already exists we send back a message and cancel the registration
          res.send({message: "Email already exists!"})
        }
+       else {
+    
+        db.query("SELECT * FROM users WHERE phoneNr = ?;", (phoneNr),
+        (err, result) => {
+         if(result.length>0) {
+            res.send({message: "Phone number already exists!"})
+          }
 
        else { 
          bcrypt.hash(password, saltRounds, (err, hash) => { //Function that hashes the pasword from request
@@ -98,8 +105,7 @@ app.post('/register', (req, res) => {
          })
        }
      }
-     ) 
-});
+     )}})});
 
 app.post('/login', async(req, res) => {
 
