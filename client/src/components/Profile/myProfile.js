@@ -30,12 +30,15 @@ function myProfile () {
   const {user, setUser} = useContext(UserContext);
 
   const [showEdit, setShowEdit] = useState(false);
+  const [showFileSubmit, setShowFileSubmit] = useState(false);
 
   const [emailInputStatus, setEmailInputStatus] = useState("");
   const [nameInputStatus, setNameInputStatus] = useState("");
   const [password1InputStatus, setPassword1InputStatus] = useState("");
   const [password2InputStatus, setPassword2InputStatus] = useState("");
   const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
+
+  const [fileUpload, setFileUpload] = useState("");
 
   //Values to update/change
   const [name, setName] = useState(user.name);
@@ -55,9 +58,6 @@ function myProfile () {
         if (object.target.value.length > object.target.maxLength) {
          object.target.value = object.target.value.slice(0, object.target.maxLength)
           }
-          else if (object.target.value.lenght < 8) {
-            //Something here to handle inproper Danish phone nr ()
-          }
         }
 
   const handleNewEditClick = () => {
@@ -68,6 +68,12 @@ function myProfile () {
     setBachelorDegree(user.bachelorDegree);
     setMasterDegree(user.masterDegree);
    }
+
+  const handleFileSubmitStatus = (e) => {
+    setShowFileSubmit(true);
+    setFileUpload(e.target.files[0]);
+    console.log(fileUpload);
+  }
 
    const handleBachelorChange = (e)  => {
     setBachelorDegree(e.target.value);
@@ -82,7 +88,8 @@ function myProfile () {
     setPassword1InputStatus("");
     setPassword2InputStatus("");
     setPhonenrInputStatus("");
-     setShowEdit(false); //If cancelled, we return to profile container
+    setShowEdit(false); //If cancelled, we return to profile container
+    setShowFileSubmit(false); //If cancelled, we return fileSubmission status to default
    }
 
    
@@ -147,6 +154,19 @@ function myProfile () {
       }
     );
    }};
+
+   const cvUpload =() => {
+
+    const formData = new FormData();
+
+		formData.append('file', fileUpload);
+
+    Axios.post("http://localhost:3001/uploadCV", formData
+    ).then(
+      (response) => {
+        alert(response.data.message);  //Sending message from server to user
+   })
+   };
     return (
       <>
       <div>
@@ -265,6 +285,15 @@ function myProfile () {
     <option value="Finance/Accounting">Finance/Accounting</option>
     <option value="Economics">Economics</option>
   </select>
+
+  <label className='label'>CV:</label>
+    <input type="file" onChange={(e) => {handleFileSubmitStatus(e)}} 
+    style={ showFileSubmit ? { textDecoration:'underline', color: 'darkblue', fontSize: 14} : {}} />
+        <br/>
+        <br/>
+        { showFileSubmit &&
+    <button onClick={cvUpload}>Upload CV</button>
+        }
   </div>
 
   </div>

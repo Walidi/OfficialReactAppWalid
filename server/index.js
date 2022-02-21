@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require ('mysql');
 const cors = require('cors');
+const multer = require('multer');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -48,6 +49,8 @@ db.query('SELECT 1 + 1 AS solution', function (error, results, fields) {  //Keep
   console.log('The solution is: ', results[0].solution);
 });
 
+const upload = multer({ dest: "../public/uploads/" });
+
 const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
   const token = req.headers['x-access-token']
 
@@ -64,6 +67,34 @@ const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
     });
   }
 };
+
+app.post("/uploadCV", upload.single("file"), async(req, res) => {
+    
+    const fileName = req.file.filename;
+    const mimeType = req.file.mimetype;
+    const fileSize = req.file.size;
+
+    if (!req.file) {
+        console.log("No file received");
+        res.send({message: "No file uploaded!"});
+    
+      } else {
+        console.log('file received');
+        db.query("INSERT INTO CVs (name, type, size) VALUES (?,?,?)", [fileName, mimeType, fileSize],
+        (err, result) => {
+          if (err)  {
+            res.send({message: JSON.stringify(err)}) //Sending error to front-end
+            console.log(err);  
+         }
+         if (result) {
+           res.send({message: "Your CV has been uploaded!"});
+        }
+        else {
+          console.log(err);
+        }
+
+      }
+)}});
 
 app.post('/register', (req, res) => {
 
