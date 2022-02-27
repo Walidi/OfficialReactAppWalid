@@ -1,7 +1,7 @@
 const express = require("express");
 const mysql = require ('mysql');
 const cors = require('cors');
-const multer = require('multer');
+const multer = require("multer")
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -24,6 +24,8 @@ app.use(cors({   //Parsing origin of the front-end
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'))
+
 
 app.use(
   session({
@@ -44,12 +46,22 @@ const db = mysql.createPool({  //Consider putting these values into environment 
      database: "webapptest2300",
 });
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, __dirname)
+  },
+  filename: (req, file, cb) => {
+      cb(null, Date.now() + file.originalname)
+  }
+});;
+
+const upload = multer({ storage: storage });
+
+
 db.query('SELECT 1 + 1 AS solution', function (error, results, fields) {  //Keeps pool/connection alive
   if (error) throw error;
   console.log('The solution is: ', results[0].solution);
 });
-
-const upload = multer({ dest: "../public/uploads/" });
 
 const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
   const token = req.headers['x-access-token']
@@ -68,33 +80,30 @@ const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
   }
 };
 
-app.post("/uploadCV", upload.single("file"), async(req, res) => {
-    
-    const fileName = req.file.filename;
-    const mimeType = req.file.mimetype;
-    const fileSize = req.file.size;
+app.post("/uploadCV", upload.single('file'), async(req, res) => {
+
+  const file = req.file;
+  const uploaderID = req.session.user[0].id;  //ID from user's session
 
     if (!req.file) {
         console.log("No file received");
         res.send({message: "No file uploaded!"});
-    
-      } else {
-        console.log('file received');
-        db.query("INSERT INTO CVs (name, type, size) VALUES (?,?,?)", [fileName, mimeType, fileSize],
+      } 
+      else {
+        console.log('file received!');
+        db.query("INSERT INTO CVs (uploaderID, name) VALUES (?,?)", [uploaderID, req.file.filename],
         (err, result) => {
           if (err)  {
             res.send({message: JSON.stringify(err)}) //Sending error to front-end
             console.log(err);  
          }
          if (result) {
-           res.send({message: "Your CV has been uploaded!"});
+           res.send({message: "Your CV has been uploaded!", cv: file});
         }
         else {
           console.log(err);
         }
-
-      }
-)}});
+      })}});
 
 app.post('/register', (req, res) => {
 

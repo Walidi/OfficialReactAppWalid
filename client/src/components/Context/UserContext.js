@@ -8,7 +8,6 @@ export const UserProvider = ({ children }) => {
     id: 0,
     name: "",
     email: "",
-    cvFile: "",
     bachelorDegree: "",
     masterDegree: "",
     phoneNr: 0

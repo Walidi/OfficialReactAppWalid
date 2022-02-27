@@ -38,7 +38,7 @@ function myProfile () {
   const [password2InputStatus, setPassword2InputStatus] = useState("");
   const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
 
-  const [fileUpload, setFileUpload] = useState("");
+  const [file, setFile] = useState("");
 
   //Values to update/change
   const [name, setName] = useState(user.name);
@@ -71,8 +71,7 @@ function myProfile () {
 
   const handleFileSubmitStatus = (e) => {
     setShowFileSubmit(true);
-    setFileUpload(e.target.files[0]);
-    console.log(fileUpload);
+    setFile(e.target.files[0]);
   }
 
    const handleBachelorChange = (e)  => {
@@ -158,8 +157,7 @@ function myProfile () {
    const cvUpload =() => {
 
     const formData = new FormData();
-
-		formData.append('file', fileUpload);
+    formData.append("file", file);
 
     Axios.post("http://localhost:3001/uploadCV", formData
     ).then(
