@@ -72,6 +72,7 @@ function myProfile () {
   const handleFileSubmitStatus = (e) => {
     setShowFileSubmit(true);
     setFile(e.target.files[0]);
+    console.log(e.target.files[0]);
   }
 
    const handleBachelorChange = (e)  => {
@@ -159,7 +160,7 @@ function myProfile () {
     const formData = new FormData();
     formData.append("file", file);
 
-    Axios.post("http://localhost:3001/uploadCV", formData
+    Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
     ).then(
       (response) => {
         alert(response.data.message);  //Sending message from server to user
@@ -269,6 +270,10 @@ function myProfile () {
     <option value="Business Administration">Business Administration</option>
     <option value="Biology">Biology</option>
     <option value="Finance/Accounting">Finance/Accounting</option>
+    <option value="Software engineering">Software engineering</option>
+    <option value="Computer Science">Computer Science</option>
+    <option value="Data Science">Data Science</option>
+    <option value="Information Management">Information Management</option>
     <option value="Economics">Economics</option>
   </select>
   
@@ -281,6 +286,10 @@ function myProfile () {
     <option value="Business Administration">Business Administration</option>
     <option value="Biology">Biology</option>
     <option value="Finance/Accounting">Finance/Accounting</option>
+    <option value="Software engineering">Software engineering</option>
+    <option value="Computer Science">Computer Science</option>
+    <option value="Data Science">Data Science</option>
+    <option value="Information Management">Information Management</option>
     <option value="Economics">Economics</option>
   </select>
 

@@ -48,14 +48,14 @@ const db = mysql.createPool({  //Consider putting these values into environment 
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-      cb(null, __dirname)
+      cb(null,  './cvUploads');
   },
   filename: (req, file, cb) => {
-      cb(null, Date.now() + file.originalname)
+      cb(null, Date.now() + '-'+ file.originalname)
   }
 });;
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage});
 
 
 db.query('SELECT 1 + 1 AS solution', function (error, results, fields) {  //Keeps pool/connection alive
@@ -80,10 +80,11 @@ const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
   }
 };
 
-app.post("/uploadCV", upload.single('file'), async(req, res) => {
+app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
 
   const file = req.file;
   const uploaderID = req.session.user[0].id;  //ID from user's session
+  const currentTime = new Date();
 
     if (!req.file) {
         console.log("No file received");
@@ -91,7 +92,7 @@ app.post("/uploadCV", upload.single('file'), async(req, res) => {
       } 
       else {
         console.log('file received!');
-        db.query("INSERT INTO CVs (uploaderID, name) VALUES (?,?)", [uploaderID, req.file.filename],
+        db.query("INSERT INTO CVs (uploaderID, name, updated_at) VALUES (?,?,?)", [uploaderID, req.file.filename, currentTime],
         (err, result) => {
           if (err)  {
             res.send({message: JSON.stringify(err)}) //Sending error to front-end
