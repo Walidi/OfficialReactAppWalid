@@ -164,6 +164,7 @@ function myProfile () {
     ).then(
       (response) => {
         alert(response.data.message);  //Sending message from server to user
+        //console.log(response.data.cv.originalname);     CLIENT FREEZES HERE FOR SOME REASON? :/ :/
    })
    };
     return (

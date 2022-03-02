@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
       cb(null,  './cvUploads');
   },
   filename: (req, file, cb) => {
-      cb(null, Date.now() + '-'+ file.originalname)
+      cb(null, Date.now() +'-'+ file.originalname)
   }
 });;
 
@@ -82,17 +82,21 @@ const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
 
 app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
 
-  const file = req.file;
-  const uploaderID = req.session.user[0].id;  //ID from user's session
-  const currentTime = new Date();
+  if (!req.file) {
+    console.log("No file received");
+    res.send({message: "No file uploaded!"});
+  } 
 
-    if (!req.file) {
-        console.log("No file received");
-        res.send({message: "No file uploaded!"});
-      } 
       else {
+
+        const file = req.file;
+        const uploaderID = req.session.user[0].id;  //ID from user's session
+        const fileSize = req.file.size;
+        const fileType = req.file.mimetype;
+        const currentTime = new Date();
+        
         console.log('file received!');
-        db.query("INSERT INTO CVs (uploaderID, name, updated_at) VALUES (?,?,?)", [uploaderID, req.file.filename, currentTime],
+        db.query("INSERT INTO CVs (uploaderID, name, size, type, updated_at) VALUES (?,?,?,?,?)", [uploaderID, req.file.filename, fileSize, fileType, currentTime],
         (err, result) => {
           if (err)  {
             res.send({message: JSON.stringify(err)}) //Sending error to front-end
