@@ -25,17 +25,19 @@ function myProfile () {
     }); 
 
   const history = useHistory();
-  const [auth, setAuth] = useContext(AuthContext);
 
+  //Context data
+  const [auth, setAuth] = useContext(AuthContext);
   const {user, setUser} = useContext(UserContext);
 
-  const [showEdit, setShowEdit] = useState(false);
+  //State management of Profile functions
+  const [dataChanged, setDataChanged] = useState(false);
+  const [showEditContainer, setShowEditContainer] = useState(false);
   const [showFileSubmit, setShowFileSubmit] = useState(false);
 
+  //Input messages for user
   const [emailInputStatus, setEmailInputStatus] = useState("");
   const [nameInputStatus, setNameInputStatus] = useState("");
-  const [password1InputStatus, setPassword1InputStatus] = useState("");
-  const [password2InputStatus, setPassword2InputStatus] = useState("");
   const [phonenrInputStatus, setPhonenrInputStatus] = useState("");
 
   const [file, setFile] = useState("");
@@ -47,12 +49,19 @@ function myProfile () {
   const [bachelorDegree, setBachelorDegree] = useState(user.bachelorDegree);
   const [masterDegree, setMasterDegree] = useState(user.masterDegree);
           
-  const handleLogOut =() => {
-        setAuth(false);
-        localStorage.clear();
-        sessionStorage.clear();
-        history.push('/');
-      }
+  const handleLogOut = () => {
+    setAuth(false);
+    localStorage.clear();
+    sessionStorage.clear();
+
+    Axios.get("http://localhost:3001/logout", {
+      }).then((response => {
+         console.log(response);
+       }
+    ));
+    history.push('/');
+}
+
 
   const maxLengthCheck = (object) => {
         if (object.target.value.length > object.target.maxLength) {
@@ -61,7 +70,7 @@ function myProfile () {
         }
 
   const handleNewEditClick = () => {
-    setShowEdit(true) //hides component if shown, reveals if not shown
+    setShowEditContainer(true) //hides component if shown, reveals if not shown
     setName(user.name);
     setEmail(user.email);
     setPhoneNr(user.phoneNr);
@@ -77,18 +86,18 @@ function myProfile () {
 
    const handleBachelorChange = (e)  => {
     setBachelorDegree(e.target.value);
+    setDataChanged(true);
   }
   const handleMasterChange = (e)  => {
     setMasterDegree(e.target.value);
+    setDataChanged(true);
   }
 
    const cancel = () => {
     setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
     setNameInputStatus("");
-    setPassword1InputStatus("");
-    setPassword2InputStatus("");
     setPhonenrInputStatus("");
-    setShowEdit(false); //If cancelled, we return to profile container
+    setShowEditContainer(false); //If cancelled, we return to profile container
     setShowFileSubmit(false); //If cancelled, we return fileSubmission status to default
    }
 
@@ -104,10 +113,13 @@ function myProfile () {
 
    const update = () => {
 
+    if (dataChanged==false) {
+        alert("Nothing to update!");
+      }
+
+    else {
     setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
     setNameInputStatus("");
-    setPassword1InputStatus("");
-    setPassword2InputStatus("");
     setPhonenrInputStatus("");
 
     let inputStatusOk = true;
@@ -142,18 +154,17 @@ function myProfile () {
         var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
         var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
         var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
-        var cvFile = JSON.stringify(response.data.user[0].cvFile);
         var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
         var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
         var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
-        setUser({id: id, name: name, email: email, cvFile: cvFile, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr});
+        setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr});
 
        alert(response.data.message);  //Sending message from server to user
-       setShowEdit(false);            //Returning to the normal profile view when user click 'ok'
+       setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
 
       }
     );
-   }};
+   }}};
 
    const cvUpload =() => {
 
@@ -167,6 +178,18 @@ function myProfile () {
         //console.log(response.data.cv.originalname);     CLIENT FREEZES HERE FOR SOME REASON? :/ :/
    })
    };
+
+   const getCV = () => {
+		Axios.get('http://localhost:3001/getCV',  {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+			).then(response => {
+				response.blob().then(blob => {
+					let url = window.URL.createObjectURL(blob);
+					let a = document.createElement('a');
+					a.href = url;
+				});
+				//window.location.href = response.url;
+		});
+	}
     return (
       <>
       <div>
@@ -193,7 +216,7 @@ function myProfile () {
 	<div className ="titleContainer">
 	<h1>View and edit your information!</h1>
 	</div>
-  { !showEdit && 
+  { !showEditContainer && 
   <div>
 	<div className="profileContainer">
    
@@ -211,6 +234,8 @@ function myProfile () {
 	<label className='labelValue'>{user.bachelorDegree}</label> 
 	<label className='label'>Master's degree:</label>
 	<label className='labelValue'>{user.masterDegree}</label> 
+  <label className='label'>CV:</label>
+  <a href='/somefile.txt' download style={{textDecoration:'underline', color: 'darkblue', fontSize: 15}}>file.name</a>
 	</div> 
 	</div>
 
@@ -220,7 +245,7 @@ function myProfile () {
   </div>
   }
   
-  { showEdit &&              //Write design for editing here:
+  { showEditContainer &&              //Write design for editing here:
   <div>
   <div className="editContainer">
   <div className="leftContainer">
@@ -231,7 +256,7 @@ function myProfile () {
   autoFocus 
   value={name}
   onChange={(event) => {
-    setName(event.target.value)
+    setName(event.target.value), setDataChanged(true);
     }}/>
     <p className="errorMsg">{nameInputStatus}</p>
 
@@ -242,7 +267,7 @@ function myProfile () {
   autoFocus 
   value={email}
   onChange={(event) => {
-    setEmail(event.target.value)
+    setEmail(event.target.value), setDataChanged(true);
     }}/>
    <p className="errorMsg">{emailInputStatus}</p>
 
@@ -255,7 +280,7 @@ function myProfile () {
   onInput={maxLengthCheck} 
   value={phoneNr}
   onChange={(event) => {
-    setPhoneNr(event.target.value)
+    setPhoneNr(event.target.value), setDataChanged(true);
     }}/>
    <p className="errorMsg">{phonenrInputStatus}</p>
 

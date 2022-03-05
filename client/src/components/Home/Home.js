@@ -38,7 +38,6 @@ function Home () {
       sessionStorage.clear();
 
       Axios.get("http://localhost:3001/logout", {
-
       }).then((response => {
       console.log(response);
       }

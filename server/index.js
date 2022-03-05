@@ -24,8 +24,6 @@ app.use(cors({   //Parsing origin of the front-end
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'))
-
 
 app.use(
   session({
@@ -86,7 +84,6 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
     console.log("No file received");
     res.send({message: "No file uploaded!"});
   } 
-
       else {
 
         const file = req.file;
@@ -96,7 +93,8 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
         const currentTime = new Date();
         
         console.log('file received!');
-        db.query("INSERT INTO CVs (uploaderID, name, size, type, updated_at) VALUES (?,?,?,?,?)", [uploaderID, req.file.filename, fileSize, fileType, currentTime],
+        db.query("INSERT INTO CVs (uploaderID, name, size, type, uploaded_at) VALUES (?,?,?,?,?)", 
+        [uploaderID, req.file.filename, fileSize, fileType, currentTime],
         (err, result) => {
           if (err)  {
             res.send({message: JSON.stringify(err)}) //Sending error to front-end
@@ -109,6 +107,11 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
           console.log(err);
         }
       })}});
+
+app.get('/getCV'), verifyJWT, async(req, res) => {
+
+  
+}
 
 app.post('/register', (req, res) => {
 
