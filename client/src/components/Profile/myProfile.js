@@ -76,6 +76,7 @@ function myProfile () {
     setPhoneNr(user.phoneNr);
     setBachelorDegree(user.bachelorDegree);
     setMasterDegree(user.masterDegree);
+    getCV();
    }
 
   const handleFileSubmitStatus = (e) => {
@@ -99,6 +100,7 @@ function myProfile () {
     setPhonenrInputStatus("");
     setShowEditContainer(false); //If cancelled, we return to profile container
     setShowFileSubmit(false); //If cancelled, we return fileSubmission status to default
+    setDataChanged(false);
    }
 
    
@@ -113,11 +115,6 @@ function myProfile () {
 
    const update = () => {
 
-    if (dataChanged==false) {
-        alert("Nothing to update!");
-      }
-
-    else {
     setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
     setNameInputStatus("");
     setPhonenrInputStatus("");
@@ -150,7 +147,7 @@ function myProfile () {
     {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
     ).then(
       (response) => {
-        //Making sure our currentUser Context in client attains the newly updated data when screens chance
+        //Making sure our currentUser Context in client attains the newly updated data when screens change
         var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
         var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
         var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
@@ -161,10 +158,11 @@ function myProfile () {
 
        alert(response.data.message);  //Sending message from server to user
        setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
+       setDataChanged(false);
 
       }
     );
-   }}};
+   }};
 
    const cvUpload =() => {
 
@@ -180,16 +178,12 @@ function myProfile () {
    };
 
    const getCV = () => {
-		Axios.get('http://localhost:3001/getCV',  {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
-			).then(response => {
-				response.blob().then(blob => {
-					let url = window.URL.createObjectURL(blob);
-					let a = document.createElement('a');
-					a.href = url;
-				});
-				//window.location.href = response.url;
+		Axios.get('http://localhost:3001/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+			).then(
+        (response) => {
+		      console.log(response);
 		});
-	}
+	};
     return (
       <>
       <div>
@@ -331,7 +325,9 @@ function myProfile () {
 
   </div>
   <div className="editButtonContainer">
+     { dataChanged &&
 	<button className='buttonUpdate' onClick={update}> Save changes </button>
+      }
 	<button className='buttonCancel' onClick={cancel}> Cancel </button>
 	</div> 
   </div>

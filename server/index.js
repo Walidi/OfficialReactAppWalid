@@ -108,10 +108,28 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
         }
       })}});
 
-app.get('/getCV'), verifyJWT, async(req, res) => {
-
-  
-}
+app.get('/getCV', verifyJWT, async(req, res, next) => {
+        //Check if file exists for the user:
+        db.query("SELECT name FROM CVs WHERE uploaderID = ?", (req.session.user[0].id),
+        (err, result) => {
+          if (err)  {
+              res.send({err: err}) //Sending error to front-end
+              console.log(err);
+           } 
+       
+        if (result.length>0) { //Checking if query returns a row
+        var fileName = result[0].name;
+        //If so, then do this by retrieving fileName from database related to the user:        
+        var filePath = `./cvUploads/${fileName}`; // Or format the path using the `id` rest param
+        res.download(filePath, fileName);    
+        //next();
+        console.log('Succesfully sending ' + fileName + ' back to client!');
+        }
+        else {
+          res.send({message: "No file found for you!"});
+          console.log('No file found in database belonging to user');
+        }
+    })});
 
 app.post('/register', (req, res) => {
 
