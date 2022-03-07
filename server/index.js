@@ -85,8 +85,6 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
     res.send({message: "No file uploaded!"});
   } 
       else {
-
-        const file = req.file;
         const uploaderID = req.session.user[0].id;  //ID from user's session
         const fileSize = req.file.size;
         const fileType = req.file.mimetype;
@@ -101,7 +99,9 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
             console.log(err);  
          }
          if (result) {
-           res.send({message: "Your CV has been uploaded!", cv: file});
+           var filePath = `./cvUploads/${req.file.filename}`; // Or format the path using the `id` rest param
+           res.send({message: "File: " + req.file.filename +  " has been uploaded!"});
+           res.download(filePath, req.file.filename);
         }
         else {
           console.log(err);
@@ -123,7 +123,7 @@ app.get('/getCV', verifyJWT, async(req, res, next) => {
         var filePath = `./cvUploads/${fileName}`; // Or format the path using the `id` rest param
         res.download(filePath, fileName);    
         //next();
-        console.log('Succesfully sending ' + fileName + ' back to client!');
+        console.log('Succesfully sending ' + fileName + ' back to client!\nAnd location: ' + filePath);
         }
         else {
           res.send({message: "No file found for you!"});
