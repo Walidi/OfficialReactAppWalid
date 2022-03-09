@@ -121,7 +121,7 @@ app.get('/getCV', verifyJWT, async(req, res, next) => {
         var fileName = result[0].name;
         //If so, then do this by retrieving fileName from database related to the user:        
         var filePath = `./cvUploads/${fileName}`; // Or format the path using the `id` rest param
-        res.download(filePath, fileName);    
+        res.download(filePath);    
         //next();
         console.log('Succesfully sending ' + fileName + ' back to client!\nAnd location: ' + filePath);
         }

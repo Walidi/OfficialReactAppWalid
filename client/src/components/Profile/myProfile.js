@@ -76,7 +76,6 @@ function myProfile () {
     setPhoneNr(user.phoneNr);
     setBachelorDegree(user.bachelorDegree);
     setMasterDegree(user.masterDegree);
-    getCV();
    }
 
   const handleFileSubmitStatus = (e) => {
@@ -178,11 +177,18 @@ function myProfile () {
    };
 
    const getCV = () => {
-		Axios.get('http://localhost:3001/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+		Axios.get('http://localhost:3001/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true, responseType: 'blob'}
 			).then(
         (response) => {
-		      console.log(response);
-		});
+		      //Create a Blob from the PDF Stream
+           const file = new Blob(
+            [response.data], 
+            {type: 'application/pdf'});
+             //Build a URL from the file
+            const fileURL = URL.createObjectURL(file);
+             //Open the URL on new Window
+            window.open(fileURL);
+          });
 	};
     return (
       <>
@@ -228,8 +234,9 @@ function myProfile () {
 	<label className='labelValue'>{user.bachelorDegree}</label> 
 	<label className='label'>Master's degree:</label>
 	<label className='labelValue'>{user.masterDegree}</label> 
+
   <label className='label'>CV:</label>
-  <a href='/somefile.txt' download style={{textDecoration:'underline', color: 'darkblue', fontSize: 15}}>file.name</a>
+  <a href="#" onClick={getCV}>nameOfFile</a>
 	</div> 
 	</div>
 
