@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require ('mysql');
 const cors = require('cors');
 const multer = require("multer")
+var fs = require('fs');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -99,14 +100,23 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
             console.log(err);  
          }
          if (result) {
-           var filePath = `./cvUploads/${req.file.filename}`; // Or format the path using the `id` rest param
-           res.send({message: "File: " + req.file.filename +  " has been uploaded!"});
-           res.download(filePath, req.file.filename);
-        }
-        else {
-          console.log(err);
-        }
-      })}});
+           db.query("UPDATE users set cvFile = ? WHERE id = ?", [req.file.filename, uploaderID],
+           (err, result) => {
+             if (err) {
+               res.send({message: JSON.stringify(err)});
+               console.log(err);
+             }
+        if (result) {
+            var filePath = `./cvUploads/${req.file.filename}`; 
+            req.session.user[0].cvFile = req.file.filename;
+            res.send({user: req.session.user, message: "File: " + req.file.filename +  " has been uploaded!"});
+            res.download(filePath, req.file.filename);
+             }
+             else {
+               console.log(err);
+             }
+           }
+)}})}});
 
 app.get('/getCV', verifyJWT, async(req, res, next) => {
         //Check if file exists for the user:
@@ -121,7 +131,7 @@ app.get('/getCV', verifyJWT, async(req, res, next) => {
         var fileName = result[0].name;
         //If so, then do this by retrieving fileName from database related to the user:        
         var filePath = `./cvUploads/${fileName}`; // Or format the path using the `id` rest param
-        res.download(filePath);    
+        res.download(filePath, fileName);    
         //next();
         console.log('Succesfully sending ' + fileName + ' back to client!\nAnd location: ' + filePath);
         }
@@ -130,6 +140,29 @@ app.get('/getCV', verifyJWT, async(req, res, next) => {
           console.log('No file found in database belonging to user');
         }
     })});
+/*
+app.delete("/deleteCV", verifyJWT, async(req, res) => {
+
+  db.query("DELETE * FROM CVs WHERE uploaderID = ?;", (req.session.user[0].id), 
+  (err, result) => {
+    if (err)  {
+      res.send({message: JSON.stringify(err)}) //Sending error to front-end
+      console.log(err);  
+   }
+   if (result) {
+    var filePath = `./cvUploads/${req.file.filename}`; // Or format the path using the `id` rest param
+    fs.unlink(`./cvUploads/${fileName}`,(err) => {
+    if(err) throw err;
+    console.log(filename + ' was deleted!');
+  }
+}
+  else {
+    console.log(err);
+  }
+
+});
+
+})});*/
 
 app.post('/register', (req, res) => {
 
@@ -139,6 +172,7 @@ app.post('/register', (req, res) => {
      const phoneNr  = req.body.phoneNr;
      const bachelorDegree = req.body.bachelorDegree;
      const masterDegree = req.body.masterDegree;
+     const cvFile = req.body.cvFile;
 
      db.query("SELECT * FROM users WHERE email = ?", (email),
      (err, result) => {
@@ -161,8 +195,8 @@ app.post('/register', (req, res) => {
           }
 
           db.query(
-            "INSERT INTO users (email, password, name, phoneNr, bachelorDegree, masterDegree) VALUES (?,?,?,?,?,?)", 
-          [email, hash, sirname, phoneNr, bachelorDegree, masterDegree],
+            "INSERT INTO users (email, password, name, phoneNr, bachelorDegree, masterDegree, cvFile) VALUES (?,?,?,?,?,?,?)", 
+          [email, hash, sirname, phoneNr, bachelorDegree, masterDegree, cvFile],
           (err, result) => {
              res.send({err: err});
              console.log(err);

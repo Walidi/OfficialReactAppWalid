@@ -10,7 +10,8 @@ export const UserProvider = ({ children }) => {
     email: "",
     bachelorDegree: "",
     masterDegree: "",
-    phoneNr: 0
+    phoneNr: 0,
+    cvFile: ""
   });
 
   return (

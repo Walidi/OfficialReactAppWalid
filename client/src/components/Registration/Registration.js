@@ -102,8 +102,8 @@ function Registration () {
       password: passwordReg1,
       phoneNr: phonenrReg, 
       bachelorDegree: "--None--",
-      masterDegree: "--None--"
-
+      masterDegree: "--None--",
+      cvFile: "No file uploaded"
     }).then(response => {
       if (response.data.message) {    //If the response from server returns us the message of "User already exists" we alert here!
       alert(response.data.message + " Try another!");
