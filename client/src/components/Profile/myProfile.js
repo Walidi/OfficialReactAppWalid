@@ -80,6 +80,7 @@ function myProfile () {
 
   const handleFileSubmitStatus = (e) => {
     setShowFileSubmit(true);
+    setDataChanged(true);
     setFile(e.target.files[0]);
     console.log(e.target.files[0]);
   }
@@ -173,12 +174,23 @@ function myProfile () {
     ).then(
       (response) => {
         alert(response.data.message);  //Sending message from server to user
-        //console.log(response.data.cv.originalname);     CLIENT FREEZES HERE FOR SOME REASON? :/ :/
-   })
+        var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+        var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+        var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+        var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
+        var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
+        var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+        var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
+        setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+     })
    };
 
    const getCV = () => {
-		Axios.get('http://localhost:3001/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true, responseType: 'blob'}
+
+    if (user.cvFile == "No file uploaded") {
+      }
+    else {
+	 	Axios.get('http://localhost:3001/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true, responseType: 'blob'}
 			).then(
         (response) => {
 		      //Create a Blob from the PDF Stream
@@ -190,7 +202,7 @@ function myProfile () {
              //Open the URL on new Window
             window.open(fileURL);
           });
-	};
+   }};
     return (
       <>
       <div>
@@ -237,7 +249,7 @@ function myProfile () {
 	<label className='labelValue'>{user.masterDegree}</label> 
 
   <label className='label'>CV:</label>
-  <a href="#" onClick={getCV}>nameOfFile</a>
+  <a href="#" onClick={getCV}>{user.cvFile}</a>
 	</div> 
 	</div>
 
