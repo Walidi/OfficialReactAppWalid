@@ -80,7 +80,6 @@ function myProfile () {
 
   const handleFileSubmitStatus = (e) => {
     setShowFileSubmit(true);
-    setDataChanged(true);
     setFile(e.target.files[0]);
     console.log(e.target.files[0]);
   }
@@ -114,6 +113,32 @@ function myProfile () {
   }
 
    const update = () => {
+
+    if (showFileSubmit == true && dataChanged == false) {
+
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+      ).then(
+        (response) => {
+          var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+          var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+          var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+          var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
+          var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
+          var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+          var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
+          setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+       
+          alert(response.data.message);  //Sending message from server to user
+          setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
+          setShowFileSubmit(false);
+
+        })
+    } 
+
+    if (showFileSubmit == false && dataChanged == true) {
 
     setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
     setNameInputStatus("");
@@ -161,29 +186,74 @@ function myProfile () {
        setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
        setDataChanged(false);
 
-      }
-    );
-   }};
+      });
+    }
+     }
+      if (showFileSubmit == true && dataChanged == true) {
+        setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
+        setNameInputStatus("");
+        setPhonenrInputStatus("");
+    
+        let inputStatusOk = true;
+    
+        if (name == "") {
+         setNameInputStatus("Name required!");
+           inputStatusOk = false;
+        }
+       else if (name.length < 3) {
+          setNameInputStatus("Name must be at least 3 characters!");
+          inputStatusOk = false;
+        }
+    
+        if (phoneNr.length < 8) {
+          setPhonenrInputStatus("Vald phone number required!");
+          inputStatusOk = false;
+         }
+    
+        if (checkEmail(email) == false) {
+          setEmailInputStatus("Vald email required!");
+          inputStatusOk = false;
+        }
+    
+        if (inputStatusOk) {   //If input status is true I.E no input errors - We send post request!
+    
+        Axios.patch("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
+        bachelorDegree: bachelorDegree, masterDegree: masterDegree}, 
+        {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+        ).then(
+          (response) => {
+            var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+            var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+            var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+            var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
+            var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
+            var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+            var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
+            setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+           alert(response.data.message);  //Sending message from server to user
+          });
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+      ).then(
+        (response) => {
+          var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+          var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+          var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+          var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
+          var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
+          var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+          var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
+          setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+          alert(response.data.message);  //Sending message from server to user
+          setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
+          setDataChanged(false);   
 
-   const cvUpload =() => {
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
-    ).then(
-      (response) => {
-        alert(response.data.message);  //Sending message from server to user
-        var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
-        var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
-        var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
-        var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
-        var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
-        var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
-        var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
-        setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
-     })
-   };
+        });
+          } 
+        }
+      };
 
    const getCV = () => {
 
@@ -338,16 +408,13 @@ function myProfile () {
     style={ showFileSubmit ? { textDecoration:'underline', color: 'darkblue', fontSize: 14} : {}} />
         <br/>
         <br/>
-        { showFileSubmit &&
-    <button onClick={cvUpload}>Upload CV</button>
-        }
   </div>
 
   </div>
   <div className="editButtonContainer">
-     { dataChanged &&
+     { (dataChanged || showFileSubmit) && 
 	<button className='buttonUpdate' onClick={update}> Save changes </button>
-      }
+     }
 	<button className='buttonCancel' onClick={cancel}> Cancel </button>
 	</div> 
   </div>
