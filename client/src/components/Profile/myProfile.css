@@ -179,3 +179,8 @@ select {
   color: red;
   font-size: 12px;
 }
+.deleteBTN {
+  color: #8B0000;
+  margin-left: 95px;
+  margin-bottom: auto;
+}

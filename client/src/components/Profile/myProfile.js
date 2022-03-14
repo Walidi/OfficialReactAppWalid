@@ -7,6 +7,8 @@ import { useHistory } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
 import { UserContext } from '../Context/UserContext';
 import validator from 'validator'
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 import {
   Nav,
@@ -21,7 +23,14 @@ function myProfile () {
 
   useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
     if (auth==false) {
-      history.push('/');}
+      history.push('/');
+        }
+    if (user.cvFile=="No file uploaded") { //If no cv is uploaded, we hide delete icon for obvious reasons
+        setShowDeleteIcon(false);
+       }
+    else {                    
+        setShowDeleteIcon(true);     //Show delete icon if user has existing cv file
+    }
     }); 
 
   const history = useHistory();
@@ -34,6 +43,7 @@ function myProfile () {
   const [dataChanged, setDataChanged] = useState(false);
   const [showEditContainer, setShowEditContainer] = useState(false);
   const [showFileSubmit, setShowFileSubmit] = useState(false);
+  const [showDeleteIcon, setShowDeleteIcon] = useState(false);
 
   //Input messages for user
   const [emailInputStatus, setEmailInputStatus] = useState("");
@@ -116,6 +126,7 @@ function myProfile () {
         return cvFile;
     }
     else {
+        setShowDeleteIcon(true);
         return cvFile.substring(14);
     }
 }
@@ -329,7 +340,11 @@ function myProfile () {
 	<label className='labelValue'>{user.masterDegree}</label> 
 
   <label className='label'>CV:</label>
-  <a href="#" onClick={getCV}>{user.cvFile}</a>
+  <a href="#" style={{textDecoration:'underline', color: 'darkblue', fontSize: 16}} onClick={getCV}>{user.cvFile}</a>
+    {showDeleteIcon &&
+     <DeleteIcon style={{color:"#8B0000", marginLeft: 7}}/>
+  }
+
 	</div> 
 	</div>
 
@@ -413,8 +428,8 @@ function myProfile () {
     <option value="Economics">Economics</option>
   </select>
 
-  <label className='label'>CV:</label>
-    <input type="file" onChange={(e) => {handleFileSubmitStatus(e)}} 
+  <label className='label'>Upload your CV:</label>
+    <input type="file"  accept=".pdf" onChange={(e) => {handleFileSubmitStatus(e)}} 
     style={ showFileSubmit ? { textDecoration:'underline', color: 'darkblue', fontSize: 14} : {}} />
         <br/>
         <br/>
