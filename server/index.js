@@ -109,7 +109,7 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
         if (result) {
             var filePath = `./cvUploads/${req.file.filename}`; 
             req.session.user[0].cvFile = req.file.filename;
-            res.send({user: req.session.user, message: "File: " + req.file.filename +  " has been uploaded!"});
+            res.send({user: req.session.user, message: req.file.filename.substring(14) +  " has been uploaded!"});
             res.download(filePath, req.file.filename);
              }
              else {

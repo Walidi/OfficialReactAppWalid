@@ -101,7 +101,6 @@ function myProfile () {
     setShowFileSubmit(false); //If cancelled, we return fileSubmission status to default
     setDataChanged(false);
    }
-
    
   const checkEmail = (email) => {
     if (email != "" && validator.isEmail(email)) {
@@ -111,6 +110,16 @@ function myProfile () {
       return false;
     }
   }
+
+  const checkCV = (cvFile) => {
+    if (cvFile=="No file uploaded") {
+        return cvFile;
+    }
+    else {
+        return cvFile.substring(14);
+    }
+}
+
 
    const update = () => {
 
@@ -129,7 +138,8 @@ function myProfile () {
           var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
           var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
           var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
-          setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+
+          setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
        
           alert(response.data.message);  //Sending message from server to user
           setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
@@ -180,7 +190,7 @@ function myProfile () {
         var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
         var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
         var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
-        setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+        setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
 
        alert(response.data.message);  //Sending message from server to user
        setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
@@ -229,7 +239,7 @@ function myProfile () {
             var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
             var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
             var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
-            setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+            setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
            alert(response.data.message);  //Sending message from server to user
           });
       const formData = new FormData();
@@ -245,7 +255,7 @@ function myProfile () {
           var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
           var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
           var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
-          setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: cvFile});
+          setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
           alert(response.data.message);  //Sending message from server to user
           setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
           setDataChanged(false);   
