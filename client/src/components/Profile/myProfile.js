@@ -302,7 +302,15 @@ function myProfile () {
           Axios.delete("http://localhost:3001/deleteCV", {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
           ).then(
             (response) => {
-               console.log(response.message);
+              var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
+              var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
+              var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
+              var bachelorDegree = JSON.stringify(response.data.user[0].bachelorDegree).replace(/^"(.+(?="$))"$/, '$1');
+              var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
+              var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
+              var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
+              setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
+              alert(response.data.message);  //Sending message from server to user
             }
           )
         }

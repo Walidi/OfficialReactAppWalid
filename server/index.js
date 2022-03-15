@@ -90,7 +90,13 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
         const fileSize = req.file.size;
         const fileType = req.file.mimetype;
         const currentTime = new Date();
+        db.query("DELETE FROM CVs WHERE uploaderID = ?;", (uploaderID),
+        (err, result) => {
+            if (err) {
+              console.log(err);
+            }
         
+          if (result) {
         console.log('file received!');
         db.query("INSERT INTO CVs (uploaderID, name, size, type, uploaded_at) VALUES (?,?,?,?,?)", 
         [uploaderID, req.file.filename, fileSize, fileType, currentTime],
@@ -116,7 +122,7 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
                console.log(err);
              }
            }
-)}})}});
+)}})}})}});
 
 app.get('/getCV', verifyJWT, async(req, res, next) => {
         //Check if file exists for the user:
