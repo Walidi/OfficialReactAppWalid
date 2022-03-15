@@ -294,6 +294,19 @@ function myProfile () {
             window.open(fileURL);
           });
    }};
+
+    const deleteCV = () => {
+        var confirmed = confirm("Do you want to delete " + user.cvFile + " ?");
+
+        if (confirmed) {
+          Axios.delete("http://localhost:3001/deleteCV", {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+          ).then(
+            (response) => {
+               console.log(response.message);
+            }
+          )
+        }
+    }
     return (
       <>
       <div>
@@ -338,13 +351,16 @@ function myProfile () {
 	<label className='labelValue'>{user.bachelorDegree}</label> 
 	<label className='label'>Master's degree:</label>
 	<label className='labelValue'>{user.masterDegree}</label> 
-
+  
   <label className='label'>CV:</label>
+
+  <div className="cvContainer">
   <a href="#" style={{textDecoration:'underline', color: 'darkblue', fontSize: 16}} onClick={getCV}>{user.cvFile}</a>
     {showDeleteIcon &&
-     <DeleteIcon style={{color:"#8B0000", marginLeft: 7}}/>
+     <DeleteIcon style={{color:"#8B0000", marginLeft: 7, cursor:'pointer', marginTop: -2}} onClick={deleteCV}/>
   }
-
+  </div>
+ 
 	</div> 
 	</div>
 

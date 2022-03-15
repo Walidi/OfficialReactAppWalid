@@ -19,7 +19,7 @@ app.use(express.json()); //Parsing Json
 
 app.use(cors({   //Parsing origin of the front-end
    origin: ["http://localhost:3000"], 
-   methods: ["GET", "POST", "PUT", "PATCH"],
+   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
    credentials: true   //Allows cookies to be enabled
 }));  
 
@@ -140,29 +140,43 @@ app.get('/getCV', verifyJWT, async(req, res, next) => {
           console.log('No file found in database belonging to user');
         }
     })});
-/*
+
 app.delete("/deleteCV", verifyJWT, async(req, res) => {
 
-  db.query("DELETE * FROM CVs WHERE uploaderID = ?;", (req.session.user[0].id), 
+  db.query("DELETE FROM CVs WHERE uploaderID = ?;", (req.session.user[0].id), 
   (err, result) => {
     if (err)  {
       res.send({message: JSON.stringify(err)}) //Sending error to front-end
       console.log(err);  
    }
    if (result) {
-    var filePath = `./cvUploads/${req.file.filename}`; // Or format the path using the `id` rest param
-    fs.unlink(`./cvUploads/${fileName}`,(err) => {
-    if(err) throw err;
-    console.log(filename + ' was deleted!');
+   db.query("Select cvFile FROM users WHERE id = ?" , (req.session.user[0].id),
+   (err, result) => {
+     if (err) {
+      res.send({message: JSON.stringify(err)}) //Sending error to front-end
+      console.log(err);  
+     }
+     if (result) {
+      var fileName = result[0].cvFile;
+      fs.unlink(`./cvUploads/${fileName}`,(err) => {
+      if(err) throw err;
+      console.log(fileName + ' was deleted from user');
+      req.session.user[0].cvFile = "No file uploaded";
+      res.send({user: req.session.user, message: "File deleted!"})
+      db.query("UPDATE users SET cvFile = 'No file uploaded' WHERE id = ?;", (req.session.user[0].id),
+      (err, result) => {
+        if (err){
+            console.log(err);
+        }
+      });
+     });
+   } 
+  });
   }
-}
   else {
     console.log(err);
   }
-
-});
-
-})});*/
+})});
 
 app.post('/register', (req, res) => {
 
