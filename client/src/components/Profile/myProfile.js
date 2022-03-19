@@ -27,9 +27,11 @@ function myProfile () {
         }
     if (user.cvFile=="No file uploaded") { //If no cv is uploaded, we hide delete icon for obvious reasons
         setShowDeleteIcon(false);
+        setCvUploaded(false);
        }
     else {                    
         setShowDeleteIcon(true);     //Show delete icon if user has existing cv file
+        setCvUploaded(true);
     }
     }); 
 
@@ -44,6 +46,7 @@ function myProfile () {
   const [showEditContainer, setShowEditContainer] = useState(false);
   const [showFileSubmit, setShowFileSubmit] = useState(false);
   const [showDeleteIcon, setShowDeleteIcon] = useState(false);
+  const [cvUploaded, setCvUploaded] = useState(false);
 
   //Input messages for user
   const [emailInputStatus, setEmailInputStatus] = useState("");
@@ -311,6 +314,7 @@ function myProfile () {
               var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
               setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
               alert(response.data.message);  //Sending message from server to user
+              setShowEditContainer(false);
             }
           )
         }
@@ -452,11 +456,20 @@ function myProfile () {
     <option value="Economics">Economics</option>
   </select>
 
-  <label className='label'>Upload your CV:</label>
-    <input type="file"  accept=".pdf" onChange={(e) => {handleFileSubmitStatus(e)}} 
+  <label className='label'>CV:</label>
+    {!cvUploaded &&
+    <input type="file" accept=".pdf" onChange={(e) => {handleFileSubmitStatus(e)}} 
     style={ showFileSubmit ? { textDecoration:'underline', color: 'darkblue', fontSize: 14} : {}} />
-        <br/>
-        <br/>
+        }
+    {cvUploaded &&
+      <div className="cvContainer">
+      <a href="#" style={{textDecoration:'underline', color: 'darkblue', fontSize: 16}} onClick={getCV}>{user.cvFile}</a>
+        {showDeleteIcon &&
+         <DeleteIcon style={{color:"#8B0000", marginLeft: 7, cursor:'pointer', marginTop: -2}} onClick={deleteCV}/>
+      }
+      </div>
+    }
+
   </div>
 
   </div>

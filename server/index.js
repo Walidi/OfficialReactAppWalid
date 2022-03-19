@@ -81,22 +81,17 @@ const verifyJWT = (req, res, next) => { //Autherizing if user is allowed
 
 app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
 
-  if (!req.file) {
-    console.log("No file received");
-    res.send({message: "No file uploaded!"});
-  } 
-      else {
+   if (!req.file) {
+      console.log("No file received");
+      res.send({message: "No file uploaded!"});
+    } 
+
+    else {
         const uploaderID = req.session.user[0].id;  //ID from user's session
         const fileSize = req.file.size;
         const fileType = req.file.mimetype;
         const currentTime = new Date();
-        db.query("DELETE FROM CVs WHERE uploaderID = ?;", (uploaderID),
-        (err, result) => {
-            if (err) {
-              console.log(err);
-            }
-        
-          if (result) {
+
         console.log('file received!');
         db.query("INSERT INTO CVs (uploaderID, name, size, type, uploaded_at) VALUES (?,?,?,?,?)", 
         [uploaderID, req.file.filename, fileSize, fileType, currentTime],
@@ -105,14 +100,14 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
             res.send({message: JSON.stringify(err)}) //Sending error to front-end
             console.log(err);  
          }
-         if (result) {
+      if (result) {
            db.query("UPDATE users set cvFile = ? WHERE id = ?", [req.file.filename, uploaderID],
            (err, result) => {
              if (err) {
                res.send({message: JSON.stringify(err)});
                console.log(err);
              }
-        if (result) {
+      if (result) {
             var filePath = `./cvUploads/${req.file.filename}`; 
             req.session.user[0].cvFile = req.file.filename;
             res.send({user: req.session.user, message: req.file.filename.substring(14) +  " has been uploaded!"});
@@ -122,7 +117,7 @@ app.post("/uploadCV", verifyJWT, upload.single('file'), async(req, res) => {
                console.log(err);
              }
            }
-)}})}})}});
+)}})}});
 
 app.get('/getCV', verifyJWT, async(req, res, next) => {
         //Check if file exists for the user:
