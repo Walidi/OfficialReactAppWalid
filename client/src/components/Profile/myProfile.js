@@ -141,7 +141,21 @@ function myProfile () {
 
       const formData = new FormData();
       formData.append("file", file);
-  
+
+      if (file.size > 1000000) 
+         {
+              alert("File too big!");
+         }
+      else if (file.type!= "application/pdf") {
+              alert("Only .pdf files allowed!");
+        }
+      
+      else if (file.name.length > 50) {
+              alert("Filename too long!");
+        }
+
+     else {
+
       Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
       ).then(
         (response) => {
@@ -154,13 +168,12 @@ function myProfile () {
           var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1');
 
           setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
-       
           alert(response.data.message);  //Sending message from server to user
           setShowEditContainer(false);            //Returning to the normal profile view when user click 'ok'
           setShowFileSubmit(false);
 
         })
-    } 
+    }} 
 
     if (showFileSubmit == false && dataChanged == true) {
 
@@ -258,6 +271,20 @@ function myProfile () {
           });
       const formData = new FormData();
       formData.append("file", file);
+
+      if (file.size > 1000000) 
+      {
+           alert("File too big!");
+      }
+      else if (file.type!= "application/pdf") {
+           alert("Only .pdf files allowed!");
+      }
+   
+      else if (file.name.length > 50) {
+           alert("Filename too long!");
+     }
+
+     else {
   
       Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
       ).then(
@@ -275,7 +302,7 @@ function myProfile () {
           setDataChanged(false);   
 
         });
-          } 
+          }} 
         }
       };
 
