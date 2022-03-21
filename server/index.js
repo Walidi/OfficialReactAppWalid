@@ -3,6 +3,7 @@ const mysql = require ('mysql');
 const cors = require('cors');
 const multer = require("multer")
 var fs = require('fs');
+const port = process.env.PORT || 3001;
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -18,10 +19,12 @@ const app = express();
 app.use(express.json()); //Parsing Json
 
 app.use(cors({   //Parsing origin of the front-end
-   origin: ["https://walido-webapp.herokuapp.com"], 
+   origin: ["http://localhost:3000"], 
    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
    credentials: true   //Allows cookies to be enabled
 }));  
+
+app.get('/', (req, res) => res.send("Hi!"));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -49,9 +52,9 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
       cb(null,  './cvUploads');
   },
-  filename: (req, file, cb) => {
+  filename: (req, file, cb) => { 
       cb(null, Date.now() +'-'+ file.originalname)
-  }
+  } 
 });;
 
 const upload = multer({ storage: storage});
@@ -341,7 +344,7 @@ app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
    }
      if (result) {
      db.query(retrieved, (id), 
-     (err, resultRetrieved) => {
+     (err, resultRetrieved) => { 
       if (err) {
       res.send({message: err}) //Sending error to front-end
       console.log(err);
@@ -356,6 +359,6 @@ app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
 })};
 })}})});
 
-app.listen(process.env.PORT || 3000, ()=>{  // do not add localhost here if you are deploying it
-  console.log('\x1b[32m%s\x1b[0m', 'Server running on port 3001!');
-}); //port number server is running on  
+app.listen(port, () => {
+  console.log('\x1b[32m%s\x1b[0m', 'Server running on port 3001!')
+}); //port number server is running on
