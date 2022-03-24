@@ -18,7 +18,7 @@ function Login () {
   const history = useHistory();
 
   useEffect(() => {   //Ensuring we cannot go back to login page when authenticated!
-    if (loginStatus==true) {
+    if (loginStatus===true) {
       history.push('/home');}
     }); 
 
@@ -27,7 +27,7 @@ function Login () {
   }
 
   const checkCV = (cvFile) => {
-    if (cvFile=="No file uploaded") {
+    if (cvFile==="No file uploaded") {
         return cvFile;
     }
     else {
@@ -41,12 +41,12 @@ function Login () {
   const handleLogin = () => {
     
     
-    if (emailAuth == "" || passwordAuth == "") {   //Dummy check
+    if (emailAuth === "" || passwordAuth === "") {   //Dummy check
       setInputResponse("Fields required!");
       setLoginStatus(false);
      }
    else
-    Axios.post('http://localhost:3001/login', {
+    Axios.post('https://walido-server.herokuapp.com/login', {
       email: emailAuth,
       password: passwordAuth
     }).then((response)=> {
@@ -55,10 +55,10 @@ function Login () {
        setLoginStatus(false);
       } 
       else {    //SUCCESS! 
-       
-           {loginStatus && goToHomeScreen()}; 
-           localStorage.setItem("token", response.data.token); //Json web token is set to user's local storage
+          
+           {loginStatus && goToHomeScreen()};
            setLoginStatus(true); //Maybe consider setting it as (response.data.auth) instead of client-dependant: 'true'
+           localStorage.setItem("token", response.data.token); //Json web token is set to user's local storage
            var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
            var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
            var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');
@@ -68,7 +68,7 @@ function Login () {
            var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1'); //Consider cutting off data values from file
    
            setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
-      }
+        }
     });
   };
 

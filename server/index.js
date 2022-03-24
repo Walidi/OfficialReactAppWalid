@@ -19,7 +19,7 @@ const app = express();
 app.use(express.json()); //Parsing Json
 
 app.use(cors({   //Parsing origin of the front-end
-   origin: ["https://walido-server.herokuapp.com/"], 
+   origin: ["https://walido.herokuapp.com"], 
    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
    credentials: true   //Allows cookies to be enabled
 }));  
@@ -28,6 +28,8 @@ app.get('/', (req, res) => res.send("Hi!"));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.set('trust proxy', 1)
 
 app.use(
   session({
@@ -38,6 +40,8 @@ app.use(
     saveUninitialized: false,
     cookie: {  //How long will the cookie live for?
       expires: 60 * 60 * 1000, //Expires after one hour
+      secure: true,
+      httpOnly: false
     }
   }));
 
@@ -308,7 +312,7 @@ app.get('/users', verifyJWT, (req, res) => {
   }
 });
 });
-
+ 
 app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
   const name = req.body.name;
   const email = req.body.email;

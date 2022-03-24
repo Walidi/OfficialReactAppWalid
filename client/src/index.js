@@ -5,7 +5,7 @@ import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import RegistrationConfirmed from './components/Confirmation/RegistrationConfirmed'
 import Home from './components/Home/Home';
-import myProfile from './components/Profile/myProfile';
+import MyProfile from './components/Profile/MyProfile';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthContext } from './components/Context/AuthContext';
 import Axios from 'axios';
@@ -18,8 +18,8 @@ function App () {           //Exact path = Beginning page of the site
   const {setUser} = useContext(UserContext);
 
 
-  const checkCV = (cvFile) => {
-      if (cvFile=="No file uploaded") {
+  const checkCV = (cvFile) => { 
+      if (cvFile==="No file uploaded") {
           return cvFile;
       }
       else {
@@ -31,8 +31,7 @@ function App () {           //Exact path = Beginning page of the site
   useEffect(() => { //Stay logged in, if user is logged in, after refresh
 
     const token = localStorage.getItem('token');
-
-    Axios.post("http://localhost:3001/authenticate", {  //End-point for creation request
+    Axios.post("https://walido-server.herokuapp.com/authenticate", {  //End-point for creation request
     token: token, 
     },{withCredentials: true}).then(response => {
       if (!response.data.auth) { //checking for response message
@@ -49,13 +48,12 @@ function App () {           //Exact path = Beginning page of the site
         var masterDegree = JSON.stringify(response.data.user[0].masterDegree).replace(/^"(.+(?="$))"$/, '$1');
         var phoneNr = JSON.stringify(response.data.user[0].phoneNr).replace(/^"(.+(?="$))"$/, '$1');
         var cvFile = JSON.stringify(response.data.user[0].cvFile).replace(/^"(.+(?="$))"$/, '$1'); //CONSIDER CUTTING OFF data value from filename
-
         setUser({id: id, name: name, email: email, bachelorDegree: bachelorDegree, masterDegree: masterDegree, phoneNr: phoneNr, cvFile: checkCV(cvFile)});
        }
     })
   }
   ,[]);
-
+  
   return (
   <AuthContext.Provider value={[authStatus, setAuthStatus]}>
     <Router>
@@ -64,7 +62,7 @@ function App () {           //Exact path = Beginning page of the site
       <Route path="/Registration" component={Registration} />
       <Route path ="/Confirmation" component={RegistrationConfirmed}/>
       <ProtectedRoute path="/home" component ={Home} authStatus = {authStatus}/>
-      <ProtectedRoute path = "/myProfile" component={myProfile} authStatus = {authStatus}/>
+      <ProtectedRoute path = "/myProfile" component={MyProfile} authStatus = {authStatus}/>
     </Switch>
     </Router>
   </AuthContext.Provider>
@@ -74,7 +72,7 @@ function App () {           //Exact path = Beginning page of the site
   render(
     // wrap root element with context
     <UserProvider>
-      <App />
+      <App /> 
     </UserProvider>,
     rootElement
   );

@@ -1,4 +1,4 @@
-import React, { Component, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Axios from 'axios';
 import './Home.css'
 import  {withRouter } from 'react-router-dom';
@@ -28,7 +28,7 @@ function Home () {
     useEffect(() => { //Ensuring we cannot go back to Home page when logged out! Already done with protected routing, but double security :D
       console.log(auth);
       console.log('Current user is: ' + user.name);
-      if (auth==false) {
+      if (auth===false) {
         history.push('/');}
       }); 
 
@@ -37,7 +37,7 @@ function Home () {
       localStorage.clear();
       sessionStorage.clear();
 
-      Axios.get("http://localhost:3001/logout", {
+      Axios.get("https://walido-server.herokuapp.com/logout", {
       }).then((response => {
       console.log(response);
       }
@@ -46,7 +46,7 @@ function Home () {
   }
 
     const getUsers = () => {
-        Axios.get("http://localhost:3001/users", {
+        Axios.get("https://walido-server.herokuapp.com/users", {
           
         headers: {
           "x-access-token": localStorage.getItem("token"),

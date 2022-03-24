@@ -1,5 +1,5 @@
-import React, { Component, useContext, useState, useEffect} from 'react';
-import './myProfile.css'
+import React, {useContext, useState, useEffect} from 'react';
+import './MyProfile.css'
 import Axios from 'axios';
 import  {withRouter } from 'react-router-dom';
 import logo from '../../images/logo.png';
@@ -19,13 +19,13 @@ import {
   NavBtnLink
 } from '../NavBar/NavbarElements';
 
-function myProfile () {
+function MyProfile () {
 
   useEffect(() => { //Ensuring we cannot go back to Profile page when logged out! Already done with protected routing, but double security :D
-    if (auth==false) {
+    if (auth===false) {
       history.push('/');
         }
-    if (user.cvFile=="No file uploaded") { //If no cv is uploaded, we hide delete icon for obvious reasons
+    if (user.cvFile==="No file uploaded") { //If no cv is uploaded, we hide delete icon for obvious reasons
         setShowDeleteIcon(false);
         setCvUploaded(false);
        }
@@ -67,7 +67,7 @@ function myProfile () {
     localStorage.clear();
     sessionStorage.clear();
 
-    Axios.get("http://localhost:3001/logout", {
+    Axios.get("https://walido-server.herokuapp.com/logout", {
       }).then((response => {
          console.log(response);
        }
@@ -114,9 +114,26 @@ function myProfile () {
     setShowFileSubmit(false); //If cancelled, we return fileSubmission status to default
     setDataChanged(false);
    }
+
+   const handleNameChange = (e) => {
+       setName(e.target.value);
+       setDataChanged(true);
+
+   }
+
+   const handleEmailChange = (e) => {
+       setEmail(e.target.value);
+       setDataChanged(true);
+  }
+  
+  const handlePhoneNrChange = (e) => {
+       setPhoneNr(e.target.value);
+       setDataChanged(true);
+  }
+  
    
   const checkEmail = (email) => {
-    if (email != "" && validator.isEmail(email)) {
+    if (email !== "" && validator.isEmail(email)) {
       return true;
     }
     else {
@@ -125,7 +142,7 @@ function myProfile () {
   }
 
   const checkCV = (cvFile) => {
-    if (cvFile=="No file uploaded") {
+    if (cvFile==="No file uploaded") {
         return cvFile;
     }
     else {
@@ -137,7 +154,7 @@ function myProfile () {
 
    const update = () => {
 
-    if (showFileSubmit == true && dataChanged == false) {
+    if (showFileSubmit === true && dataChanged === false) {
 
       const formData = new FormData();
       formData.append("file", file);
@@ -146,7 +163,7 @@ function myProfile () {
          {
               alert("File too big!");
          }
-      else if (file.type!= "application/pdf") {
+      else if (file.type!== "application/pdf") {
               alert("Only .pdf files allowed!");
         }
       
@@ -156,7 +173,7 @@ function myProfile () {
 
      else {
 
-      Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+      Axios.post("https://walido-server.herokuapp.com/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
       ).then(
         (response) => {
           var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
@@ -175,7 +192,7 @@ function myProfile () {
         })
     }} 
 
-    if (showFileSubmit == false && dataChanged == true) {
+    if (showFileSubmit === false && dataChanged === true) {
 
     setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
     setNameInputStatus("");
@@ -183,7 +200,7 @@ function myProfile () {
 
     let inputStatusOk = true;
 
-    if (name == "") {
+    if (name === "") {
      setNameInputStatus("Name required!");
        inputStatusOk = false;
     }
@@ -197,14 +214,14 @@ function myProfile () {
       inputStatusOk = false;
      }
 
-    if (checkEmail(email) == false) {
+    if (checkEmail(email) === false) {
       setEmailInputStatus("Vald email required!");
       inputStatusOk = false;
     }
 
     if (inputStatusOk) {   //If input status is true I.E no input errors - We send post request!
 
-    Axios.patch("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
+    Axios.patch("https://walido-server.herokuapp.com/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
     bachelorDegree: bachelorDegree, masterDegree: masterDegree}, 
     {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
     ).then(
@@ -226,14 +243,14 @@ function myProfile () {
       });
     }
      }
-      if (showFileSubmit == true && dataChanged == true) {
+      if (showFileSubmit === true && dataChanged === true) {
         setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
         setNameInputStatus("");
         setPhonenrInputStatus("");
     
         let inputStatusOk = true;
     
-        if (name == "") {
+        if (name === "") {
          setNameInputStatus("Name required!");
            inputStatusOk = false;
         }
@@ -247,14 +264,14 @@ function myProfile () {
           inputStatusOk = false;
          }
     
-        if (checkEmail(email) == false) {
+        if (checkEmail(email) === false) {
           setEmailInputStatus("Vald email required!");
           inputStatusOk = false;
         }
     
         if (inputStatusOk) {   //If input status is true I.E no input errors - We send post request!
     
-        Axios.patch("http://localhost:3001/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
+        Axios.patch("https://walido-server.herokuapp.com/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
         bachelorDegree: bachelorDegree, masterDegree: masterDegree}, 
         {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
         ).then(
@@ -276,7 +293,7 @@ function myProfile () {
       {
            alert("File too big!");
       }
-      else if (file.type!= "application/pdf") {
+      else if (file.type!== "application/pdf") {
            alert("Only .pdf files allowed!");
       }
    
@@ -286,7 +303,7 @@ function myProfile () {
 
      else {
   
-      Axios.post("http://localhost:3001/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+      Axios.post("https://walido-server.herokuapp.com/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
       ).then(
         (response) => {
           var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
@@ -308,10 +325,10 @@ function myProfile () {
 
    const getCV = () => {
 
-    if (user.cvFile == "No file uploaded") {
+    if (user.cvFile === "No file uploaded") {
       }
     else {
-	 	Axios.get('http://localhost:3001/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true, responseType: 'blob'}
+	 	Axios.get('https://walido-server.herokuapp.com/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true, responseType: 'blob'}
 			).then(
         (response) => {
 		      //Create a Blob from the PDF Stream
@@ -326,10 +343,10 @@ function myProfile () {
    }};
 
     const deleteCV = () => {
-        var confirmed = confirm("Do you want to delete " + user.cvFile + " ?");
+        var confirmed = window.confirm("Do you want to delete " + user.cvFile + " ?");
 
         if (confirmed) {
-          Axios.delete("http://localhost:3001/deleteCV", {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+          Axios.delete("https://walido-server.herokuapp.com/deleteCV", {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
           ).then(
             (response) => {
               var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
@@ -419,9 +436,7 @@ function myProfile () {
   type="text" 
   autoFocus 
   value={name}
-  onChange={(event) => {
-    setName(event.target.value), setDataChanged(true);
-    }}/>
+  onChange={(event) => {handleNameChange(event)}}/>
     <p className="errorMsg">{nameInputStatus}</p>
 
   <label className='editLabel'>Email:</label>
@@ -430,9 +445,7 @@ function myProfile () {
   type="text" 
   autoFocus 
   value={email}
-  onChange={(event) => {
-    setEmail(event.target.value), setDataChanged(true);
-    }}/>
+  onChange={(event) => {handleEmailChange(event)}}/>
    <p className="errorMsg">{emailInputStatus}</p>
 
   <label className='editLabel'>Phone number:</label>
@@ -443,9 +456,7 @@ function myProfile () {
   maxLength = "8" 
   onInput={maxLengthCheck} 
   value={phoneNr}
-  onChange={(event) => {
-    setPhoneNr(event.target.value), setDataChanged(true);
-    }}/>
+  onChange={(event) => {handlePhoneNrChange(event)}}/>
    <p className="errorMsg">{phonenrInputStatus}</p>
 
 	</div>
@@ -512,4 +523,4 @@ function myProfile () {
     );
 };
 
-export default withRouter(myProfile);
+export default withRouter(MyProfile);
