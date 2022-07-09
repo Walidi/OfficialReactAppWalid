@@ -3,7 +3,7 @@ const mysql = require ('mysql');
 const cors = require('cors');
 const multer = require("multer")
 var fs = require('fs');
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3001;  //Port nr
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -19,7 +19,7 @@ const app = express();
 app.use(express.json()); //Parsing Json
 
 app.use(cors({   //Parsing origin of the front-end
-   origin: ["https://walido.herokuapp.com"], 
+   origin: ["http://localhost:3000"], 
    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
    credentials: true   //Allows cookies to be enabled
 }));  
@@ -28,8 +28,6 @@ app.get('/', (req, res) => res.send("Hi!"));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.set('trust proxy', 1)
 
 app.use(
   session({
@@ -310,7 +308,7 @@ app.get('/users', verifyJWT, (req, res) => {
   }
 });
 });
- 
+
 app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
   const name = req.body.name;
   const email = req.body.email;

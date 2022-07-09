@@ -13,9 +13,9 @@ import {UserContext, UserProvider} from './components/Context/UserContext';
 
 function App () {           //Exact path = Beginning page of the site
 
-  const [authStatus, setAuthStatus] = useState(AuthContext);
+  const [authStatus, setAuthStatus] = useState(AuthContext); //Updating authentication as we're reloading
    
-  const {setUser} = useContext(UserContext);
+  const {setUser} = useContext(UserContext);  //Updating and retrieving user as we are 'reloading'
 
 
   const checkCV = (cvFile) => { 
@@ -23,7 +23,7 @@ function App () {           //Exact path = Beginning page of the site
           return cvFile;
       }
       else {
-          return cvFile.substring(14);
+          return cvFile.substring(14);  //If user has an existing CV in serve, we cut off the date time in the filename, then left with filename
       }
   }
   
@@ -31,16 +31,16 @@ function App () {           //Exact path = Beginning page of the site
   useEffect(() => { //Stay logged in, if user is logged in, after refresh
 
     const token = localStorage.getItem('token');
-    Axios.post("https://walido-server.herokuapp.com/authenticate", {  //End-point for creation request
+    Axios.post("http://localhost:3001/authenticate", {  //End-point for creation request
     token: token, 
     },{withCredentials: true}).then(response => {
       if (!response.data.auth) { //checking for response message
         setAuthStatus(false); //Login status is 
         localStorage.clear();
-        console.log("NOT LOGGED IN!");
+        console.log(response.data.user);
        } else {
         setAuthStatus(true);  
-        console.log("LOGGED IN!");
+        console.log(response.data.user);
         var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
         var name = JSON.stringify(response.data.user[0].name).replace(/^"(.+(?="$))"$/, '$1');
         var email = JSON.stringify(response.data.user[0].email).replace(/^"(.+(?="$))"$/, '$1');

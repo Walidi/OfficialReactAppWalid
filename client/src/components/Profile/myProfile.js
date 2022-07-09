@@ -36,7 +36,8 @@ function MyProfile () {
     }); 
 
   const history = useHistory();
-
+  
+  const url = "http://localhost:3001/";
   //Context data
   const [auth, setAuth] = useContext(AuthContext);
   const {user, setUser} = useContext(UserContext);
@@ -67,7 +68,7 @@ function MyProfile () {
     localStorage.clear();
     sessionStorage.clear();
 
-    Axios.get("https://walido-server.herokuapp.com/logout", {
+    Axios.get(url+"logout", {
       }).then((response => {
          console.log(response);
        }
@@ -153,7 +154,8 @@ function MyProfile () {
 
 
    const update = () => {
-
+     
+    //If only CV has been uploaded in the updateView:
     if (showFileSubmit === true && dataChanged === false) {
 
       const formData = new FormData();
@@ -173,7 +175,7 @@ function MyProfile () {
 
      else {
 
-      Axios.post("https://walido-server.herokuapp.com/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+      Axios.post(url+"uploadCV", formData, {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
       ).then(
         (response) => {
           var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
@@ -191,7 +193,8 @@ function MyProfile () {
 
         })
     }} 
-
+    
+    //If only data has been updated but no CV changes:
     if (showFileSubmit === false && dataChanged === true) {
 
     setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
@@ -221,7 +224,7 @@ function MyProfile () {
 
     if (inputStatusOk) {   //If input status is true I.E no input errors - We send post request!
 
-    Axios.patch("https://walido-server.herokuapp.com/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
+    Axios.patch(url+"updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
     bachelorDegree: bachelorDegree, masterDegree: masterDegree}, 
     {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
     ).then(
@@ -243,6 +246,8 @@ function MyProfile () {
       });
     }
      }
+ 
+     //If both CV and data are updated:
       if (showFileSubmit === true && dataChanged === true) {
         setEmailInputStatus("");  //Resetting the input-statuses so we can set them again on-press
         setNameInputStatus("");
@@ -271,7 +276,7 @@ function MyProfile () {
     
         if (inputStatusOk) {   //If input status is true I.E no input errors - We send post request!
     
-        Axios.patch("https://walido-server.herokuapp.com/updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
+        Axios.patch(url+"updateMyProfile", {name: name, email: email, phoneNr: phoneNr, 
         bachelorDegree: bachelorDegree, masterDegree: masterDegree}, 
         {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
         ).then(
@@ -303,7 +308,7 @@ function MyProfile () {
 
      else {
   
-      Axios.post("https://walido-server.herokuapp.com/uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+      Axios.post(url+"uploadCV", formData,    {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
       ).then(
         (response) => {
           var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
@@ -328,7 +333,7 @@ function MyProfile () {
     if (user.cvFile === "No file uploaded") {
       }
     else {
-	 	Axios.get('https://walido-server.herokuapp.com/getCV', {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true, responseType: 'blob'}
+	 	Axios.get(url+"getCV", {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true, responseType: 'blob'}
 			).then(
         (response) => {
 		      //Create a Blob from the PDF Stream
@@ -346,7 +351,7 @@ function MyProfile () {
         var confirmed = window.confirm("Do you want to delete " + user.cvFile + " ?");
 
         if (confirmed) {
-          Axios.delete("https://walido-server.herokuapp.com/deleteCV", {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
+          Axios.delete(url+"deleteCV", {headers: {"x-access-token": localStorage.getItem("token")},withCredentials: true}
           ).then(
             (response) => {
               var id = JSON.stringify(response.data.user[0].id).replace(/^"(.+(?="$))"$/, '$1');
