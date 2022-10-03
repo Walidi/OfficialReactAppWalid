@@ -15,6 +15,7 @@ const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(express.json()); //Parsing Json
 
@@ -33,11 +34,13 @@ app.use(
   session({
     key: "user_sid",
     secret: "secret",    //Normally this has to be long and complex for security
-    resave: false,
+    resave: true,
     rolling: true,
     saveUninitialized: false,
     cookie: {  //How long will the cookie live for?
       expires: 60 * 60 * 1000, //Expires after one hour
+      secure: true,
+      sameSite: "none"
     }
   }));
 
@@ -360,5 +363,5 @@ app.patch('/updateMyProfile', verifyJWT, async(req, res) => {
 })}})});
 
 app.listen(port, () => {
-  console.log('\x1b[32m%s\x1b[0m', 'Server running on port 3001!')
+  console.log('\x1b[32m%s\x1b[0m', `App running at http://localhost:${port}`)
 }); //port number server is running on

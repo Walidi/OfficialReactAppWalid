@@ -8,7 +8,7 @@ import { UserContext } from '../Context/UserContext';
 
 function Login () {
   
-  const url = "http://localhost:3001/";
+  const url = "https://walido-service.herokuapp.com/";
   const [emailAuth, setEmailAuth] = useState("");
   const [passwordAuth, setPasswordAuth] = useState("");
 
@@ -35,7 +35,6 @@ function Login () {
         return cvFile.substring(14);
     }
 }
-
   
   Axios.defaults.withCredentials = true; 
 
